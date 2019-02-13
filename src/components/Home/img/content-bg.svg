@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1093" viewBox="0 0 1920 1093">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_465" data-name="Rectangle 465" width="1920" height="1093" transform="translate(0 1044)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.5" y1="0.49" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0473d1"/>
+      <stop offset="1" stop-color="#367cff"/>
+    </linearGradient>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.615" r="0.549" gradientTransform="matrix(0, 1, -0.674, 0, 0.915, 0.115)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#e5f1fa"/>
+      <stop offset="1" stop-color="#025aff" stop-opacity="0.737"/>
+    </radialGradient>
+    <filter id="Path_2465" x="-273.5" y="-0.5" width="2467.014" height="1848.655" filterUnits="userSpaceOnUse">
+      <feOffset dy="-10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="17.5" result="blur"/>
+      <feFlood flood-color="#08b3ff" flood-opacity="0.149"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <radialGradient id="radial-gradient-2" cx="0.325" cy="0.197" r="0.912" gradientTransform="matrix(0.525, 0.851, -0.849, 0.524, 0.321, -0.183)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#57d2ff"/>
+      <stop offset="1" stop-color="#0054b7"/>
+    </radialGradient>
+    <filter id="Ellipse_322" x="474.5" y="774.5" width="202" height="202" filterUnits="userSpaceOnUse">
+      <feOffset dx="5" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur-2"/>
+      <feFlood flood-color="#57d2ff" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_323" x="1297.5" y="418.5" width="343" height="343" filterUnits="userSpaceOnUse">
+      <feOffset dx="5" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur-3"/>
+      <feFlood flood-color="#57d2ff" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_318" x="-185.5" y="817.5" width="508" height="508" filterUnits="userSpaceOnUse">
+      <feOffset dx="5" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur-4"/>
+      <feFlood flood-color="#57d2ff" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-4"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_319" x="1177.5" y="112.5" width="156" height="156" filterUnits="userSpaceOnUse">
+      <feOffset dx="5" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur-5"/>
+      <feFlood flood-color="#57d2ff" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-5"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_320" x="269.5" y="347.5" width="216" height="216" filterUnits="userSpaceOnUse">
+      <feOffset dx="5" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur-6"/>
+      <feFlood flood-color="#57d2ff" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-6"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_321" x="1539.5" y="838.5" width="508" height="508" filterUnits="userSpaceOnUse">
+      <feOffset dx="5" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur-7"/>
+      <feFlood flood-color="#57d2ff" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-7"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Mask_Group_153" data-name="Mask Group 153" transform="translate(0 -1044)" clip-path="url(#clip-path)">
+    <g id="Group_1232" data-name="Group 1232">
+      <path id="Path_2462" data-name="Path 2462" d="M262,0V915.124s304.766,828.531,1181.007,828.531S2624.014,915.124,2624.014,915.124V0Z" transform="translate(2403.014 2787.655) rotate(-180)" fill="url(#linear-gradient)"/>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Path_2465)">
+        <path id="Path_2465-2" data-name="Path 2465" d="M262,0l32.354,878.325s272.412,865.33,1148.654,865.33,1146.921-865.33,1146.921-865.33L2624.014,0Z" transform="translate(2403.01 1805.66) rotate(-180)" fill="url(#radial-gradient)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Ellipse_322)">
+        <circle id="Ellipse_322-2" data-name="Ellipse 322" cx="63.5" cy="63.5" r="63.5" transform="translate(507 807)" opacity="0.28" fill="url(#radial-gradient-2)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Ellipse_323)">
+        <circle id="Ellipse_323-2" data-name="Ellipse 323" cx="134" cy="134" r="134" transform="translate(1330 451)" opacity="0.076" fill="url(#radial-gradient-2)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Ellipse_318)">
+        <circle id="Ellipse_318-2" data-name="Ellipse 318" cx="216.5" cy="216.5" r="216.5" transform="translate(-153 850)" opacity="0.195" fill="url(#radial-gradient-2)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Ellipse_319)">
+        <circle id="Ellipse_319-2" data-name="Ellipse 319" cx="40.5" cy="40.5" r="40.5" transform="translate(1210 145)" opacity="0.191" fill="url(#radial-gradient-2)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Ellipse_320)">
+        <circle id="Ellipse_320-2" data-name="Ellipse 320" cx="70.5" cy="70.5" r="70.5" transform="translate(302 380)" opacity="0.268" fill="url(#radial-gradient-2)"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 0, 1044)" filter="url(#Ellipse_321)">
+        <circle id="Ellipse_321-2" data-name="Ellipse 321" cx="216.5" cy="216.5" r="216.5" transform="translate(1572 871)" opacity="0.4" fill="url(#radial-gradient-2)"/>
+      </g>
+    </g>
+  </g>
+</svg>
