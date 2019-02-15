@@ -1,8 +1,10 @@
 import React from "react";
+import { Switch, Route } from "react-router-dom";
 import headerBg from "./img/header-bg.svg";
 import arrowIcon from "./img/down-arrow.svg";
 import contentBg from "./img/content-bg.svg";
-import Form from "./Form";
+import SignInForm from "./SignInForm";
+import SignUpForm from "./SignUpForm";
 import { Header, Content } from "./styles";
 
 const Home = () => {
@@ -22,7 +24,10 @@ const Home = () => {
           <Content.Caption>Organized in one place</Content.Caption>
         </Content.Container>
         <Content.Container top={100} bottom={100}>
-          <Form />
+          <Switch>
+            <Route path="/" exact component={SignInForm} />
+            <Route path="/signup" component={SignUpForm} />
+          </Switch>
         </Content.Container>
       </Content>
     </>

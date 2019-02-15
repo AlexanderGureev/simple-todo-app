@@ -1,7 +1,19 @@
 import React from "react";
-import Home from "./components/Home";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import "antd/dist/antd.css";
 import "./index.css";
 
-const App = () => <Home />;
+import Home from "./components/Home";
+import Dashboard from "./components/Dashboard";
+
+const App = () => (
+  <Router>
+    <Switch>
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/" component={Home} />
+    </Switch>
+  </Router>
+);
 
 export default App;

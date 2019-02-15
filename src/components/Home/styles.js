@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import AnchorLink from "react-anchor-link-smooth-scroll";
+import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "./img/logo.svg";
 
 export const Header = styled.div`
@@ -109,11 +110,12 @@ Content.Title = Title;
 Content.Caption = Caption;
 
 export const Form = styled.div`
-  max-width: 360px;
+  max-width: 560px;
   border-radius: 50px;
-  padding: 50px 100px;
+  padding: 50px 80px;
   background: #fff;
-  box-shadow: 0 30px 40px rgba(0, 83, 165, 0.2);
+  box-shadow: 0 30px 40px rgba(0, 83, 165, 0.3);
+  margin: 0 15px;
 
   @media (max-width: 590px) {
     padding: 50px;
@@ -130,7 +132,7 @@ const FormHeader = styled.div`
 
 const FormHeaderTitle = styled.p`
   color: #003db1;
-  font-size: 50px;
+  font-size: 46px;
   font-weight: 500;
   font-family: "Montserrat";
   margin: 0;
@@ -169,7 +171,6 @@ const SocialBlock = styled.div`
 SocialBlock.Icon = styled.img.attrs(props => ({
   src: props.src
 }))`
-  width: 60px;
   height: 60px;
   cursor: pointer;
   &:not(:last-child) {
@@ -177,7 +178,6 @@ SocialBlock.Icon = styled.img.attrs(props => ({
   }
 
   @media (max-width: 590px) {
-    width: 40px;
     height: 40px;
   }
 
@@ -195,22 +195,8 @@ const InputGroup = styled.div`
   flex-direction: column;
 `;
 const BtnGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
+  position: relative;
   padding-top: 20px;
-
-  @media (max-width: 490px) {
-    flex-direction: column;
-  }
-
-  @media (max-width: 490px) {
-    div {
-      text-align: center;
-      &:not(:last-child) {
-        margin-bottom: 20px;
-      }
-    }
-  }
 `;
 Form.InputGroup = InputGroup;
 Form.BtnGroup = BtnGroup;
@@ -234,7 +220,7 @@ export const Input = styled.input`
 
 export const Button = styled.div`
   border-radius: 10px;
-  padding: 15px 55px;
+
   color: #fff;
   font-size: 16px;
   font-weight: 500;
@@ -242,6 +228,7 @@ export const Button = styled.div`
   background: linear-gradient(135deg, #60cbf2, #0340a0);
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
+  padding: 15px 55px;
 
   @media (max-width: 490px) {
     padding: 12px 55px;
@@ -272,7 +259,7 @@ const LinkGroup = styled.div`
   text-align: right;
   padding: 20px 0;
 `;
-const FormLink = styled.p`
+const FormLink = styled(Link)`
   color: #848080;
   font-size: 14px;
   font-weight: 500;
@@ -280,7 +267,15 @@ const FormLink = styled.p`
   margin: 0;
   cursor: pointer;
   transition: 0.3s ease;
+  display: block;
+  text-decoration: none;
 
+  @media (max-width: 590px) {
+    font-size: 12px;
+  }
+  &:not(:last-child) {
+    padding-bottom: 10px;
+  }
   &:hover {
     color: #0340a0;
   }

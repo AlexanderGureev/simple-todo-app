@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31" height="28" viewBox="0 0 31 28">
+  <g id="menu-button-of-three-horizontal-lines" transform="translate(0 -6)">
+    <path id="Path_2477" data-name="Path 2477" d="M28,6H3a3,3,0,0,0,0,6H28a3,3,0,0,0,0-6Z" fill="#b5b5b5"/>
+    <path id="Path_2478" data-name="Path 2478" d="M28,50H3a3,3,0,0,0,0,6H28a3,3,0,0,0,0-6Z" transform="translate(0 -33)" fill="#b5b5b5"/>
+    <path id="Path_2479" data-name="Path 2479" d="M28,94H3a3,3,0,0,0,0,6H28a3,3,0,0,0,0-6Z" transform="translate(0 -66)" fill="#b5b5b5"/>
+  </g>
+</svg>
