@@ -36,6 +36,7 @@ export const ContentWrapper = styled.div`
   border-radius: 50px;
   box-shadow: 0 15px 30px rgba(0, 83, 165, 0.3);
   height: 90vh;
+  width: 80%;
   min-height: 760px;
   position: relative;
 
@@ -44,7 +45,6 @@ export const ContentWrapper = styled.div`
   }
 `;
 export const Menu = styled.div`
-  font-family: "Montserrat";
   font-size: 20px;
   font-weight: 500;
   padding: 30px 60px 30px 30px;
@@ -75,7 +75,6 @@ const MenuItem = styled(Link)`
 Menu.Item = MenuItem;
 
 export const Profile = styled.div`
-  font-family: "Montserrat";
   padding: 30px 30px 20px 30px;
   text-align: center;
 
@@ -188,7 +187,6 @@ Statistics.Item.Title = Title;
 Statistics.Item.Caption = Caption;
 
 export const Categories = styled.div`
-  font-family: "Montserrat";
   padding: 30px 0 40px 0;
   border-bottom: 1px solid #d1d1d1;
 
@@ -214,10 +212,10 @@ const CategoriestTitle = styled.p`
   }
 `;
 const СategoryItem = styled.p`
+  margin: 0 0 0 30px;
   font-weight: 500;
   font-size: 16px;
   color: #3b3b3b;
-  margin: 0;
   position: relative;
   padding-left: 40px;
   @media (max-width: 991px) {
@@ -234,7 +232,7 @@ const СategoryItem = styled.p`
     content: "";
     position: absolute;
     left: 0;
-    top: 5px;
+    top: 7px;
     width: 30px;
     height: 10px;
     background: ${props => props.color};
@@ -251,20 +249,20 @@ const СategoryItem = styled.p`
 
 Categories.Title = CategoriestTitle;
 Categories.Container = styled.div`
-  padding: 0 30px;
-  max-height: 180px;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-
-  ::-webkit-scrollbar {
-    visibility: hidden;
-    width: 3px;
-    height: 2px;
-  }
-  ::-webkit-scrollbar-thumb {
-    height: 50px;
-    background-color: #666;
-    border-radius: 3px;
+  width: 100%;
+  height: 150px;
+  div {
+    outline: none;
+    ::-webkit-scrollbar {
+      visibility: hidden;
+      width: 3px;
+      height: 2px;
+    }
+    ::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: #666;
+      border-radius: 3px;
+    }
   }
 `;
 Categories.Item = СategoryItem;
@@ -321,7 +319,7 @@ export const CategoryPrefix = styled.div`
 export const Select = styled(RSelect)`
   width: 200px;
   color: #3b3b3b;
-  font-family: "Montserrat";
+
   font-weight: 400;
 
   @media (max-width: 991px) {
@@ -355,7 +353,6 @@ export const Filters = styled.div`
   align-items: center;
 `;
 const FilterItem = styled.div`
-  font-family: "Montserrat";
   text-transform: uppercase;
   font-size: 16px;
   cursor: pointer;
@@ -393,44 +390,34 @@ Filters.Item = FilterItem;
 TopLine.Container = TopLineContainer;
 
 export const TodoList = styled.div`
-  padding: 0 60px 0 30px;
-  margin: 30px 0;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  position: relative;
-  height: 80%;
-  ::-webkit-scrollbar {
-    width: 3px;
-    height: 3px;
-  }
-  ::-webkit-scrollbar-thumb {
-    height: 50px;
-    background-color: #666;
-    border-radius: 3px;
+  width: 100%;
+  height: 85%;
+  margin-bottom: 30px;
+  div {
+    outline: none;
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+    }
+    ::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: #666;
+      border-radius: 3px;
+    }
   }
   @media (max-width: 991px) {
-    margin: 0 0 30px 0;
-    padding: 0 20px 30px;
-    height: auto;
+    height: 450px;
     max-height: 450px;
   }
 `;
 const TodoItem = styled.div`
+  padding: 17px 30px;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  :not(:last-child) {
-    margin-bottom: 50px;
-  }
-  @media (max-width: 580px) {
-    :not(:last-child) {
-      margin-bottom: 20px;
-    }
-  }
+  align-items: center;
 `;
 const StyledTodoIcon = styled.div`
   min-width: 50px;
-  min-height: 50px;
+  height: 50px;
   border-radius: 50%;
   border: ${props => (props.active ? "none" : "1px solid #b4b4b4")};
   position: relative;
@@ -441,17 +428,17 @@ const StyledTodoIcon = styled.div`
 
   @media (max-width: 991px) {
     min-width: 40px;
-    min-height: 40px;
+    height: 40px;
   }
 
   @media (max-width: 680px) {
     min-width: 30px;
-    min-height: 30px;
+    height: 30px;
   }
 
   @media (max-width: 380px) {
     min-width: 20px;
-    min-height: 20px;
+    height: 20px;
   }
   svg {
     path {
@@ -466,21 +453,21 @@ const StyledTodoIcon = styled.div`
     @media (max-width: 991px) {
       width: 20px;
       height: 20px;
-      left: 10px;
-      top: 11px;
+      left: 9px;
+      top: 10px;
     }
 
     @media (max-width: 680px) {
       width: 15px;
       height: 15px;
-      left: 8px;
+      left: 7px;
       top: 8px;
     }
 
     @media (max-width: 380px) {
       width: 10px;
       height: 10px;
-      left: 5px;
+      left: 4px;
       top: 5px;
     }
   }
@@ -493,25 +480,21 @@ const TodoIcon = ({ component: Component, active = false }) => (
 );
 
 const TodoText = styled.p`
-  font-family: "Montserrat";
   color: #444445;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   margin: 0;
   padding-bottom: 5px;
   word-break: break-all;
 
   @media (max-width: 1200px) {
-    font-size: 18px;
+    font-size: 16px;
   }
   @media (max-width: 991px) {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   @media (max-width: 680px) {
-    font-size: 14px;
-  }
-  @media (max-width: 380px) {
     font-size: 12px;
   }
 `;
@@ -537,7 +520,7 @@ export const Button = styled.div`
   color: #fff;
   font-size: 16px;
   font-weight: 500;
-  font-family: "Montserrat";
+
   background: linear-gradient(135deg, #60cbf2, #0340a0);
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
@@ -549,9 +532,6 @@ export const Button = styled.div`
   @media (max-width: 960px) {
     padding: 12px 35px;
     font-size: 14px;
-  }
-  @media (max-width: 580px) {
-    max-width: 100px;
   }
 `;
 

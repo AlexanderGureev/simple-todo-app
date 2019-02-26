@@ -1,8 +1,19 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 import { Link } from "react-router-dom";
+import { Button as AntdButton } from "antd";
 import { ReactComponent as Logo } from "./img/logo.svg";
 
+const errorsAnimate = keyframes`
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
 export const Header = styled.div`
   height: 100vh;
   min-height: 800px;
@@ -26,7 +37,6 @@ Header.Logo = styled(Logo)`
 `;
 
 const Title = styled.p`
-  font-family: "Montserrat";
   font-weight: 700;
   color: #fff;
   font-size: 60px;
@@ -109,7 +119,7 @@ Content.Container = styled.div`
 Content.Title = Title;
 Content.Caption = Caption;
 
-export const Form = styled.div`
+export const Form = styled.form`
   max-width: 560px;
   border-radius: 50px;
   padding: 50px 80px;
@@ -132,9 +142,9 @@ const FormHeader = styled.div`
 
 const FormHeaderTitle = styled.p`
   color: #003db1;
-  font-size: 46px;
+  font-size: 42px;
   font-weight: 500;
-  font-family: "Montserrat";
+
   margin: 0;
 
   @media (max-width: 590px) {
@@ -148,7 +158,7 @@ const FormHeaderCaption = styled.p`
   color: #848080;
   font-size: 16px;
   font-weight: 300;
-  font-family: "Montserrat";
+
   margin: 0;
   padding-top: 10px;
 
@@ -171,7 +181,7 @@ const SocialBlock = styled.div`
 SocialBlock.Icon = styled.img.attrs(props => ({
   src: props.src
 }))`
-  height: 60px;
+  height: 50px;
   cursor: pointer;
   &:not(:last-child) {
     padding-right: 40px;
@@ -190,63 +200,88 @@ SocialBlock.Icon = styled.img.attrs(props => ({
 
 Form.SocialBlock = SocialBlock;
 const InputGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  position: relative;
 `;
 const BtnGroup = styled.div`
   position: relative;
-  padding-top: 20px;
+  margin-top: 20px;
 `;
 Form.InputGroup = InputGroup;
 Form.BtnGroup = BtnGroup;
 export const Input = styled.input`
+  width: 100%;
+  display: block;
   border-radius: 10px;
   padding: 15px 20px;
   color: #838383;
   font-size: 14px;
   font-weight: 300;
-  font-family: "Montserrat";
-  border: 1px solid #cecece;
+
+  border: ${props => (props.valid ? "1px solid #cecece" : "1px solid #cd1212")};
   outline: none;
-  &:not(:last-child) {
+  transition: border 0.3s ease;
+  :not(:last-child) {
     margin-bottom: 20px;
   }
-
   @media (max-width: 490px) {
     padding: 12px 20px;
   }
 `;
 
-export const Button = styled.div`
+export const Button = styled(AntdButton)`
+  border: none;
   border-radius: 10px;
-
   color: #fff;
   font-size: 16px;
   font-weight: 500;
-  font-family: "Montserrat";
+
   background: linear-gradient(135deg, #60cbf2, #0340a0);
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
-  padding: 15px 55px;
+  padding: 15px 70px;
+  outline: none;
+  transition: 0.3s ease;
+  opacity: ${props => (props.disabled ? ".7" : "1")};
+  height: auto;
+  span {
+    transition: 0.3s ease;
+  }
 
+  :hover[disabled] {
+    color: #fff;
+  }
+
+  :disabled,
+  :hover,
+  :focus {
+    background: linear-gradient(135deg, #60cbf2, #0340a0);
+    color: #fff;
+  }
   @media (max-width: 490px) {
     padding: 12px 55px;
   }
 `;
 
+export const Error = styled.span`
+  text-align: left;
+  font-size: 12px;
+
+  color: #cd1212;
+  position: relative;
+  left: 0;
+  display: block;
+  bottom: 10px;
+  animation: ${errorsAnimate} 0.3s ease;
+`;
 const FormFooter = styled.div``;
 const FormText = styled.p`
   color: #848080;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 300;
-  font-family: "Montserrat";
+
   margin: 0;
   line-height: 1.5;
 
-  @media (max-width: 590px) {
-    font-size: 14px;
-  }
   @media (max-width: 490px) {
     font-size: 12px;
   }
@@ -262,19 +297,22 @@ const LinkGroup = styled.div`
 const FormLink = styled(Link)`
   color: #848080;
   font-size: 14px;
-  font-weight: 500;
-  font-family: "Montserrat";
+  font-weight: 400;
+
   margin: 0;
   cursor: pointer;
   transition: 0.3s ease;
   display: block;
   text-decoration: none;
 
+  :focus {
+    text-decoration: none;
+  }
   @media (max-width: 590px) {
     font-size: 12px;
   }
   &:not(:last-child) {
-    padding-bottom: 10px;
+    padding-bottom: 5px;
   }
   &:hover {
     color: #0340a0;
