@@ -20,10 +20,15 @@ const addImageMinPlugin = config => {
 
 module.exports = override(
   addBabelPlugin(["babel-plugin-styled-components", { displayName: true }]),
-  fixBabelImports("import", {
+  fixBabelImports("antd", {
     libraryName: "antd",
     libraryDirectory: "es",
     style: true
+  }),
+  fixBabelImports("react-use", {
+    libraryName: "react-use",
+    libraryDirectory: "lib",
+    camel2DashComponentName: false
   }),
   addLessLoader({
     javascriptEnabled: true,
