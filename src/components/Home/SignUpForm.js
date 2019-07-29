@@ -7,16 +7,10 @@ import { Form, Button, Input, Error } from "./styles";
 import googleIcon from "./img/google-soc.svg";
 import fbIcon from "./img/fb-soc.svg";
 import vkIcon from "./img/vk-soc.svg";
-import { registerApi } from "../../services/api";
 
 const focusOnErrors = createDecorator();
-const onSubmit = async values => {
-  try {
-    await registerApi(values);
-  } catch (error) {
-    message.error(error.message);
-  }
-};
+const onSubmit = async values => {};
+
 const validate = ({
   email = "",
   username = "",
@@ -113,7 +107,7 @@ const FormComponent = () => {
           disabled={pristine || submitting}
           loading={submitting}
         >
-          Sign in
+          Sign up
         </Button>
       </Form.BtnGroup>
       <Form.LinkGroup>

@@ -1,7 +1,9 @@
 import React from "react";
 import { useMedia } from "react-use";
-import { ContentWrapper, Dashboard, Menu, Col, Row } from "./styles";
+import { useStoreActions } from "easy-peasy";
+import { ContentWrapper, Dashboard, Col, Row } from "./styles";
 import DropdownMenu from "./DropdownMenu";
+import Menu from "./Menu";
 import MiniProfile from "./MiniProfile";
 import Categories from "./Categories";
 import Friends from "./Friends";
@@ -9,10 +11,12 @@ import TopLine from "./TopLine";
 import TodoList from "./TodoList";
 import dashboardBg from "./img/dashboard-bg.svg";
 
-const DashboardComponent = () => {
+const DashboardComponent = props => {
+  const logoutUser = useStoreActions(actions => actions.session.logoutUser);
   const isWide = useMedia("(max-width: 991px)");
   const isSmall = useMedia("(max-width: 580px)");
 
+  const handleLogout = () => logoutUser();
   return (
     <Dashboard src={dashboardBg}>
       <ContentWrapper>
@@ -44,15 +48,9 @@ const DashboardComponent = () => {
             <Row>
               <Col xs={24}>
                 {isSmall ? (
-                  <DropdownMenu />
+                  <DropdownMenu handleClick={handleLogout} {...props} />
                 ) : (
-                  <Menu>
-                    <Menu.Item to="/">Home</Menu.Item>
-                    <Menu.Item to="/">Todos</Menu.Item>
-                    <Menu.Item to="/">Settings</Menu.Item>
-                    <Menu.Item to="/">Support</Menu.Item>
-                    <Menu.Item to="/">Logout</Menu.Item>
-                  </Menu>
+                  <Menu handleClick={handleLogout} {...props} />
                 )}
               </Col>
             </Row>

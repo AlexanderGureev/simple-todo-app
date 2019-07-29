@@ -1,25 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { StyledMenu, Dropdown, MenuBtn } from "./styles";
 import { ReactComponent as MenuBtnIcon } from "./img/menu-icon.svg";
 
-const DropdownMenu = () => {
+const DropdownMenu = ({ handleClick, location: { pathname } }) => {
   const menu = (
     <StyledMenu>
       <StyledMenu.Item key="0">
-        <Link to="/">Home</Link>
+        <Link to={`${pathname}`}>Home</Link>
       </StyledMenu.Item>
       <StyledMenu.Item key="1">
-        <Link to="/">Todos</Link>
+        <Link to={`${pathname}`}>Todos</Link>
       </StyledMenu.Item>
       <StyledMenu.Item key="2">
-        <Link to="/">Settings</Link>
+        <Link to={`${pathname}`}>Settings</Link>
       </StyledMenu.Item>
       <StyledMenu.Item key="3">
-        <Link to="/">Support</Link>
+        <Link to={`${pathname}`}>Support</Link>
       </StyledMenu.Item>
       <StyledMenu.Item key="4">
-        <Link to="/">Logout</Link>
+        <Link to={`${pathname}`} onClick={handleClick}>
+          Logout
+        </Link>
       </StyledMenu.Item>
     </StyledMenu>
   );

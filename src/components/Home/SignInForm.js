@@ -3,23 +3,26 @@ import { useForm, useField } from "react-final-form-hooks";
 import createDecorator from "final-form-focus";
 import * as IsEmail from "isemail";
 import { message } from "antd";
+import { useStoreActions } from "easy-peasy";
+import { curry } from "ramda";
 import { Form, Button, Input, Error } from "./styles";
 import googleIcon from "./img/google-soc.svg";
 import fbIcon from "./img/fb-soc.svg";
 import vkIcon from "./img/vk-soc.svg";
-import { loginApi } from "../../services/api";
 
 const focusOnErrors = createDecorator();
-const onSubmit = async values => {
+
+const onSubmit = curry(async (action, values) => {
   try {
-    await loginApi(values);
+    await action(values);
   } catch (error) {
     message.error(error.message);
   }
-};
+});
+
 const validate = ({ email = "", password = "" }) => {
   const errors = {};
-  const passRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;
+  // const passRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;
 
   if (!email) {
     errors.email = "Email is required.";
@@ -30,16 +33,17 @@ const validate = ({ email = "", password = "" }) => {
   if (!password) {
     errors.password = "Password is required.";
   }
-  if (!passRegExp.test(password)) {
-    errors.password =
-      "Minimum four characters, at least one letter and one number.";
-  }
+  // if (!passRegExp.test(password)) {
+  //   errors.password =
+  //     "Minimum four characters, at least one letter and one number.";
+  // }
   return errors;
 };
 
 const FormComponent = () => {
+  const { authUser } = useStoreActions(actions => actions.session);
   const { form, handleSubmit, pristine, submitting } = useForm({
-    onSubmit,
+    onSubmit: onSubmit(authUser),
     validate
   });
 
@@ -47,8 +51,14 @@ const FormComponent = () => {
   const email = useField("email", form);
   const password = useField("password", form);
 
+  const handleSubmitForm = async e => {
+    e.preventDefault();
+    await handleSubmit(e);
+    form.reset();
+  };
+
   return (
-    <Form id="content" onSubmit={handleSubmit}>
+    <Form id="content" onSubmit={handleSubmitForm}>
       <Form.Header>
         <Form.Header.Title>Sign in</Form.Header.Title>
         <Form.Header.Caption>

@@ -1,5 +1,6 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { useStoreState, useStoreActions } from "easy-peasy";
 import headerBg from "./img/header-bg.svg";
 import arrowIcon from "./img/down-arrow.svg";
 import contentBg from "./img/content-bg.svg";
@@ -8,7 +9,18 @@ import SignUpForm from "./SignUpForm";
 import { Header, Content } from "./styles";
 
 const Home = () => {
-  return (
+  const isAuth = useStoreState(state => state.session.isAuth);
+  const getUserProfile = useStoreActions(
+    actions => actions.session.getUserProfile
+  );
+
+  useEffect(() => {
+    getUserProfile();
+  }, [getUserProfile]);
+
+  return isAuth ? (
+    <Redirect to="/dashboard" />
+  ) : (
     <>
       <Header src={headerBg}>
         <Header.Logo />
