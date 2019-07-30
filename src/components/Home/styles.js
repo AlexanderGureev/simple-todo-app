@@ -1,7 +1,11 @@
 import styled, { keyframes } from "styled-components";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 import { Link } from "react-router-dom";
-import { Button as AntdButton } from "antd";
+import {
+  Button as AntdButton,
+  Input as AntdInput,
+  Form as AntdForm
+} from "antd";
 import { ReactComponent as Logo } from "./img/logo.svg";
 
 const errorsAnimate = keyframes`
@@ -225,25 +229,28 @@ const BtnGroup = styled.div`
 `;
 Form.InputGroup = InputGroup;
 Form.BtnGroup = BtnGroup;
-export const Input = styled.input`
-  width: 100%;
-  display: block;
-  border-radius: 10px;
-  padding: 15px 20px;
-  color: #838383;
-  font-size: 14px;
-  font-weight: 300;
 
-  border: ${props => (props.valid ? "1px solid #cecece" : "1px solid #cd1212")};
-  outline: none;
-  transition: border 0.3s ease;
-  :not(:last-child) {
-    margin-bottom: 20px;
-  }
-  @media (max-width: 490px) {
-    padding: 12px 20px;
+Form.Item = styled(AntdForm.Item)`
+  .has-error .ant-form-explain {
+    font-size: 12px;
+    padding: 5px;
   }
 `;
+export const Input = styled(AntdInput)`
+  && {
+    height: 40px;
+    border-radius: 5px;
+  }
+`;
+
+export const InputPassword = styled(AntdInput.Password)`
+  && {
+    height: 40px;
+    border-radius: 5px;
+  }
+`;
+
+Input.Password = InputPassword;
 
 export const Button = styled(AntdButton)`
   border: none;
@@ -255,7 +262,7 @@ export const Button = styled(AntdButton)`
   background: linear-gradient(135deg, #60cbf2, #0340a0);
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
-  padding: 15px 70px;
+  padding: 10px 70px;
   outline: none;
   transition: 0.3s ease;
   opacity: ${props => (props.disabled ? ".7" : "1")};
@@ -279,17 +286,6 @@ export const Button = styled(AntdButton)`
   }
 `;
 
-export const Error = styled.span`
-  text-align: left;
-  font-size: 12px;
-
-  color: #cd1212;
-  position: relative;
-  left: 0;
-  display: block;
-  bottom: 10px;
-  animation: ${errorsAnimate} 0.3s ease;
-`;
 const FormFooter = styled.div``;
 const FormText = styled.p`
   color: #848080;

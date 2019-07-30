@@ -37,8 +37,9 @@ export const ContentWrapper = styled.div`
   box-shadow: 0 15px 30px rgba(0, 83, 165, 0.3);
   height: 90vh;
   width: 80%;
-  min-height: 760px;
+  min-height: 590px;
   position: relative;
+  overflow: hidden;
 
   @media (max-width: 991px) {
     height: 100%;
@@ -74,11 +75,25 @@ const MenuItem = styled(Link)`
 `;
 Menu.Item = MenuItem;
 
-export const Profile = styled.div`
+const PositionWrapper = styled.div`
+  padding: 30px 0 40px 0;
+  position: relative;
+
+  ::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #d1d1d1;
+  }
+`;
+
+export const Profile = styled(PositionWrapper)`
   padding: 30px 30px 20px 30px;
   text-align: center;
 
-  border-bottom: 1px solid #d1d1d1;
   @media (max-width: 991px) {
     margin-top: 30px;
     border-top: 1px solid #d1d1d1;
@@ -186,14 +201,7 @@ Statistics.Item.Num = Num;
 Statistics.Item.Title = Title;
 Statistics.Item.Caption = Caption;
 
-export const Categories = styled.div`
-  padding: 30px 0 40px 0;
-  border-bottom: 1px solid #d1d1d1;
-
-  @media (max-width: 991px) {
-    border-bottom: none;
-  }
-`;
+export const Categories = styled(PositionWrapper)``;
 
 const CategoriestTitle = styled.p`
   font-weight: 600;
@@ -250,7 +258,7 @@ const СategoryItem = styled.p`
 Categories.Title = CategoriestTitle;
 Categories.Container = styled.div`
   width: 100%;
-  height: 150px;
+  height: ${props => (props.count < 5 ? `${props.count * 40}px` : "150px")};
   div {
     outline: none;
     ::-webkit-scrollbar {
@@ -268,7 +276,9 @@ Categories.Container = styled.div`
 Categories.Item = СategoryItem;
 
 export const Friends = styled(Categories)`
-  border-bottom: none;
+  ::after {
+    display: none;
+  }
 `;
 const FriendsTitle = styled(CategoriestTitle)``;
 const FriendItem = styled.div`

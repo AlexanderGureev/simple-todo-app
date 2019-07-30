@@ -13,5 +13,5 @@ code {
 }
 
 .ant-btn.ant-btn-loading:not(.ant-btn-circle):not(.ant-btn-circle-outline):not(.ant-btn-icon-only) {
-  padding: 15px 70px !important;
+  padding: 10px 70px !important;
 }

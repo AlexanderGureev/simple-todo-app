@@ -1,64 +1,34 @@
-import React from "react";
-import { useForm, useField } from "react-final-form-hooks";
-import createDecorator from "final-form-focus";
-import * as IsEmail from "isemail";
-import { message } from "antd";
+import React, { useState } from "react";
+import { message, Form as AntdForm } from "antd";
 import { useStoreActions } from "easy-peasy";
-import { curry } from "ramda";
-import { Form, Button, Input, Error } from "./styles";
+import { Form, Button, Input } from "./styles";
+import { validateRules, hasErrors } from "./validateRules";
 import googleIcon from "./img/google-soc.svg";
 import fbIcon from "./img/fb-soc.svg";
 import vkIcon from "./img/vk-soc.svg";
 
-const focusOnErrors = createDecorator();
-
-const onSubmit = curry(async (action, values) => {
-  try {
-    await action(values);
-  } catch (error) {
-    message.error(error.message);
-  }
-});
-
-const validate = ({ email = "", password = "" }) => {
-  const errors = {};
-  // const passRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;
-
-  if (!email) {
-    errors.email = "Email is required.";
-  }
-  if (!IsEmail.validate(email)) {
-    errors.email = "Email is not valid.";
-  }
-  if (!password) {
-    errors.password = "Password is required.";
-  }
-  // if (!passRegExp.test(password)) {
-  //   errors.password =
-  //     "Minimum four characters, at least one letter and one number.";
-  // }
-  return errors;
-};
-
-const FormComponent = () => {
+const FormComponent = ({ form }) => {
   const { authUser } = useStoreActions(actions => actions.session);
-  const { form, handleSubmit, pristine, submitting } = useForm({
-    onSubmit: onSubmit(authUser),
-    validate
-  });
+  const [loading, setLoading] = useState(false);
+  const { getFieldDecorator, getFieldsError } = form;
 
-  focusOnErrors(form);
-  const email = useField("email", form);
-  const password = useField("password", form);
-
-  const handleSubmitForm = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    await handleSubmit(e);
-    form.reset();
+    form.validateFields(async (err, values) => {
+      try {
+        if (!err) {
+          setLoading(true);
+          await authUser(values);
+        }
+      } catch (error) {
+        setLoading(false);
+        message.error(error.message);
+      }
+    });
   };
 
   return (
-    <Form id="content" onSubmit={handleSubmitForm}>
+    <Form id="content" onSubmit={handleSubmit}>
       <Form.Header>
         <Form.Header.Title>Sign in</Form.Header.Title>
         <Form.Header.Caption>
@@ -72,32 +42,24 @@ const FormComponent = () => {
       </Form.SocialBlock>
 
       <Form.InputGroup>
-        <Input
-          {...email.input}
-          valid={email.meta.valid || !email.meta.touched}
-          placeholder="Email"
-          type="text"
-        />
-        {email.meta.touched && email.meta.error && (
-          <Error>{email.meta.error}</Error>
-        )}
-        <Input
-          {...password.input}
-          valid={password.meta.valid || !password.meta.touched}
-          placeholder="Password"
-          type="password"
-        />
-        {password.meta.touched && password.meta.error && (
-          <Error>{password.meta.error}</Error>
-        )}
+        <Form.Item>
+          {getFieldDecorator("email", validateRules(form).email)(
+            <Input placeholder="Email" type="text" />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator("password", validateRules(form).password)(
+            <Input.Password placeholder="Password" type="password" />
+          )}
+        </Form.Item>
       </Form.InputGroup>
 
       <Form.BtnGroup>
         <Button
           type="primary"
           htmlType="submit"
-          disabled={pristine || submitting}
-          loading={submitting}
+          disabled={hasErrors(getFieldsError())}
+          loading={loading}
         >
           Sign in
         </Button>
@@ -115,4 +77,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default AntdForm.create({ name: "loginForm" })(FormComponent);

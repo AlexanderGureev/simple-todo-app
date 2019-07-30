@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useStoreActions } from "easy-peasy";
+import { useStoreActions, useStoreState } from "easy-peasy";
 import { Form, Input, Checkbox, message, Modal } from "antd";
 import { Button } from "./styles";
 
 const CreateTodo = ({ form, handleCreateNewTodo }) => {
   const createTodo = useStoreActions(actions => actions.session.createTodo);
+  const activeCategory = useStoreState(state => state.session.activeCategory);
+
   const [visible, setVisible] = useState(false);
   const { getFieldDecorator } = form;
 
@@ -20,7 +22,10 @@ const CreateTodo = ({ form, handleCreateNewTodo }) => {
     e.preventDefault();
     form.validateFields(async (err, values) => {
       if (!err) {
-        const data = await createTodo(values);
+        const data = await createTodo({
+          ...values,
+          categoryId: activeCategory
+        });
         message.success("Created new todo!");
 
         handleCreateNewTodo(data);

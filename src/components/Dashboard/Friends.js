@@ -1,25 +1,34 @@
 import React from "react";
+import { useStoreState } from "easy-peasy";
+import { Empty } from "antd";
 import { Friends } from "./styles";
 import avaIcon from "./img/ava.jpg";
 
-const FriendsComponent = () => (
-  <Friends>
-    <Friends.Title>Friends</Friends.Title>
-    <Friends.Container>
-      <Friends.Item>
-        <Friends.Avatar src={avaIcon} />
-      </Friends.Item>
-      <Friends.Item>
-        <Friends.Avatar src={avaIcon} />
-      </Friends.Item>
-      <Friends.Item>
-        <Friends.Avatar src={avaIcon} />
-      </Friends.Item>
-      <Friends.Item>
-        <Friends.Avatar src={avaIcon} />
-      </Friends.Item>
-    </Friends.Container>
-  </Friends>
-);
+const FriendsComponent = () => {
+  const { friends } = useStoreState(state => state.session.profile);
 
+  return (
+    <Friends>
+      <Friends.Title>Friends</Friends.Title>
+      {!friends.length ? (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      ) : (
+        <Friends.Container>
+          <Friends.Item>
+            <Friends.Avatar src={avaIcon} />
+          </Friends.Item>
+          <Friends.Item>
+            <Friends.Avatar src={avaIcon} />
+          </Friends.Item>
+          <Friends.Item>
+            <Friends.Avatar src={avaIcon} />
+          </Friends.Item>
+          <Friends.Item>
+            <Friends.Avatar src={avaIcon} />
+          </Friends.Item>
+        </Friends.Container>
+      )}
+    </Friends>
+  );
+};
 export default FriendsComponent;

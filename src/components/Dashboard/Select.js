@@ -1,21 +1,34 @@
 import React from "react";
+import { useStoreState, useStoreActions } from "easy-peasy";
 import { Select } from "./styles";
 
 const IndicatorSeparator = () => null;
 
-const options = [
-  { value: "home1", label: "Home1" },
-  { value: "home2", label: "Home2" },
-  { value: "home3", label: "Home3" },
-  { value: "home4", label: "Home4" }
-];
-const SelectComponent = () => (
-  <Select
-    options={options}
-    defaultValue={options[0]}
-    isSearchable={false}
-    components={{ IndicatorSeparator }}
-  />
-);
+const SelectComponent = () => {
+  const { categories } = useStoreState(state => state.session.profile);
+  const activeCategory = useStoreState(state => state.session.activeCategory);
+  const setActiveCategory = useStoreActions(
+    actions => actions.session.setActiveCategory
+  );
+
+  const getOptions = () =>
+    categories.map(({ name, id }) => ({
+      value: name,
+      label: name,
+      id
+    }));
+
+  const onChange = ({ id }) => setActiveCategory(id);
+
+  return (
+    <Select
+      options={getOptions()}
+      defaultValue={getOptions().find(({ id }) => id === activeCategory)}
+      isSearchable={false}
+      components={{ IndicatorSeparator }}
+      onChange={onChange}
+    />
+  );
+};
 
 export default SelectComponent;

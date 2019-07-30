@@ -1,51 +1,31 @@
-import React from "react";
-import { useForm, useField } from "react-final-form-hooks";
-import createDecorator from "final-form-focus";
-import * as IsEmail from "isemail";
-import { message } from "antd";
-import { Form, Button, Input, Error } from "./styles";
+import React, { useState } from "react";
+import { message, Form as AntdForm } from "antd";
+import { useStoreActions } from "easy-peasy";
+import { Form, Button, Input } from "./styles";
+import { validateRules, hasErrors } from "./validateRules";
 import googleIcon from "./img/google-soc.svg";
 import fbIcon from "./img/fb-soc.svg";
 import vkIcon from "./img/vk-soc.svg";
 
-const focusOnErrors = createDecorator();
-const onSubmit = async values => {};
+const FormComponent = ({ form }) => {
+  const { registerUser } = useStoreActions(actions => actions.session);
+  const [loading, setLoading] = useState(false);
+  const { getFieldDecorator, getFieldsError } = form;
 
-const validate = ({
-  email = "",
-  username = "",
-  password = "",
-  confirm = ""
-}) => {
-  const errors = {};
-  const passRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;
-
-  if (!email) errors.email = "Email is required.";
-  if (!username) errors.username = "Username is required.";
-  if (!IsEmail.validate(email)) errors.email = "Email is not valid.";
-  if (!password) errors.password = "Password is required.";
-
-  if (!passRegExp.test(password))
-    errors.password =
-      "Minimum four characters, at least one letter and one number.";
-
-  if (confirm !== password)
-    errors.confirm = "Two passwords that you enter is inconsistent.";
-
-  return errors;
-};
-
-const FormComponent = () => {
-  const { form, handleSubmit, pristine, submitting } = useForm({
-    onSubmit,
-    validate
-  });
-
-  focusOnErrors(form);
-  const email = useField("email", form);
-  const username = useField("username", form);
-  const password = useField("password", form);
-  const confirm = useField("confirm", form);
+  const handleSubmit = async e => {
+    e.preventDefault();
+    form.validateFields(async (err, values) => {
+      try {
+        if (!err) {
+          setLoading(true);
+          await registerUser(values);
+        }
+      } catch (error) {
+        setLoading(false);
+        message.error(error.message);
+      }
+    });
+  };
 
   return (
     <Form id="content" onSubmit={handleSubmit}>
@@ -62,50 +42,29 @@ const FormComponent = () => {
       </Form.SocialBlock>
 
       <Form.InputGroup>
-        <Input
-          {...email.input}
-          valid={email.meta.valid || !email.meta.touched}
-          placeholder="Email"
-          type="text"
-        />
-        {email.meta.touched && email.meta.error && (
-          <Error>{email.meta.error}</Error>
-        )}
-        <Input
-          {...username.input}
-          valid={username.meta.valid || !username.meta.touched}
-          placeholder="Username"
-          type="text"
-        />
-        {username.meta.touched && username.meta.error && (
-          <Error>{username.meta.error}</Error>
-        )}
-        <Input
-          {...password.input}
-          valid={password.meta.valid || !password.meta.touched}
-          placeholder="Password"
-          type="password"
-        />
-        {password.meta.touched && password.meta.error && (
-          <Error>{password.meta.error}</Error>
-        )}
-        <Input
-          {...confirm.input}
-          valid={confirm.meta.valid || !confirm.meta.touched}
-          placeholder="Confirm Password"
-          type="password"
-        />
-        {confirm.meta.touched && confirm.meta.error && (
-          <Error>{confirm.meta.error}</Error>
-        )}
+        <Form.Item>
+          {getFieldDecorator("username", validateRules(form).username)(
+            <Input placeholder="Username" type="text" />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator("email", validateRules(form).email)(
+            <Input placeholder="Email" type="text" />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator("password", validateRules(form).password)(
+            <Input.Password placeholder="Password" type="password" />
+          )}
+        </Form.Item>
       </Form.InputGroup>
 
       <Form.BtnGroup>
         <Button
           type="primary"
           htmlType="submit"
-          disabled={pristine || submitting}
-          loading={submitting}
+          disabled={hasErrors(getFieldsError())}
+          loading={loading}
         >
           Sign up
         </Button>
@@ -123,4 +82,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default AntdForm.create({ name: "registerForm" })(FormComponent);

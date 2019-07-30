@@ -15,6 +15,7 @@ const API_GET_TODOS = `${API_URL}/todos`;
 const API_LOGOUT = `${API_URL}/logout`;
 const API_GET_USER_PROFILE = `${API_URL}/user`;
 const API_CREATE_TODO = `${API_URL}/todos`;
+const API_GET_TODOS_BY_CATEGORY = `${API_URL}/todos`;
 
 const parseErrors = ({ response: { data } }) => {
   let errors = [];
@@ -71,14 +72,14 @@ const authUser = async body => {
   }
 };
 
-const registerUser = async ({ username, email, password }) => {
+const registerUser = async body => {
   try {
     const { data, status } = await axios({
       method: "POST",
       url: API_REGISTER_URL,
-      data: { username, email, password }
+      data: body
     });
-    if (status !== 200) throw new Error("The request failed");
+    if (status !== 201) throw new Error("The request failed");
     return data;
   } catch (error) {
     throw new Error(parseErrors(error));
@@ -109,10 +110,25 @@ const getUserProfile = async () => {
   }
 };
 
+const getTodosByCategory = async ({ id, params = {} }) => {
+  try {
+    const { data, status } = await axios({
+      method: "GET",
+      url: `${API_GET_TODOS_BY_CATEGORY}/${id}`,
+      params
+    });
+    if (status !== 200) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
 export default {
   authUser,
   registerUser,
   getTodos,
+  getTodosByCategory,
   logoutUser,
   getUserProfile,
   createTodo

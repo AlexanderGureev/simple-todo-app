@@ -1,6 +1,11 @@
 import { action, thunk } from "easy-peasy";
 
 const sessionEffects = {
+  registerUser: thunk(async (actions, payload, { injections: { Api } }) => {
+    const user = await Api.registerUser(payload);
+    actions.updateProfileAction(user);
+    actions.changeAuthStatusAction(true);
+  }),
   authUser: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.authUser(payload);
     actions.updateProfileAction(user);
@@ -10,6 +15,12 @@ const sessionEffects = {
     const data = await Api.getTodos(payload);
     return data;
   }),
+  getTodosByCategory: thunk(
+    async (actions, payload, { injections: { Api } }) => {
+      const data = await Api.getTodosByCategory(payload);
+      return data;
+    }
+  ),
   createTodo: thunk(async (actions, payload, { injections: { Api } }) => {
     const data = await Api.createTodo(payload);
     return data;
@@ -34,13 +45,17 @@ const model = {
     profile: {
       email: "",
       username: "",
-      id: ""
+      id: "",
+      categories: [],
+      friends: []
     },
     filterOptions: {},
+    activeCategory: "",
     isAuth: false,
     updateProfileAction: action((state, payload) => ({
       ...state,
-      profile: { ...state.profile, ...payload }
+      profile: { ...state.profile, ...payload },
+      activeCategory: payload.categories.length ? payload.categories[0].id : ""
     })),
     changeAuthStatusAction: action((state, payload) => ({
       ...state,
@@ -49,6 +64,10 @@ const model = {
     setFilter: action((state, payload) => ({
       ...state,
       filterOptions: payload
+    })),
+    setActiveCategory: action((state, payload) => ({
+      ...state,
+      activeCategory: payload
     })),
     ...sessionEffects
   }
