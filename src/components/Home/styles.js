@@ -8,16 +8,6 @@ import {
 } from "antd";
 import { ReactComponent as Logo } from "./img/logo.svg";
 
-const errorsAnimate = keyframes`
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
 export const Header = styled.div`
   height: 100vh;
   min-height: 800px;

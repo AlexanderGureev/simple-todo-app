@@ -25,6 +25,35 @@ const sessionEffects = {
     const data = await Api.createTodo(payload);
     return data;
   }),
+  changeStatusTodo: thunk(
+    async (actions, { categoryId, todoId, body }, { injections: { Api } }) => {
+      const data = await Api.updateTodo(categoryId, todoId, body);
+      return data;
+    }
+  ),
+  createCategory: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const { profile } = getState();
+      const newCategory = await Api.createCategory(payload);
+      actions.updateProfileAction({
+        categories: [...profile.categories, newCategory]
+      });
+      console.log(newCategory);
+      actions.setActiveCategory(newCategory.id);
+      return newCategory;
+    }
+  ),
+  deleteCategory: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const { profile } = getState();
+      const deletedCategory = await Api.deleteCategory(payload);
+      const filteredCategories = profile.categories.filter(
+        ({ id }) => id !== deletedCategory.id
+      );
+      actions.updateProfileAction({ categories: filteredCategories });
+      return deletedCategory;
+    }
+  ),
   logoutUser: thunk(async (actions, payload, { injections: { Api } }) => {
     await Api.logoutUser();
     actions.changeAuthStatusAction(false);

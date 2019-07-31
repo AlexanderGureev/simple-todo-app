@@ -20,6 +20,13 @@ export const Col = styled(AntdCol)`
   }
 `;
 
+export const EmptyContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 export const Dashboard = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -201,7 +208,18 @@ Statistics.Item.Num = Num;
 Statistics.Item.Title = Title;
 Statistics.Item.Caption = Caption;
 
-export const Categories = styled(PositionWrapper)``;
+export const Categories = styled(PositionWrapper)`
+  @media (max-width: 991px) {
+    ::after {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    ::after {
+      display: block;
+    }
+  }
+`;
 
 const CategoriestTitle = styled.p`
   font-weight: 600;
@@ -313,7 +331,7 @@ export const TopLine = styled.div`
   @media (max-width: 960px) {
     padding: 30px;
   }
-  @media (max-width: 580px) {
+  @media (max-width: 670px) {
     flex-direction: column-reverse;
   }
 `;
@@ -325,6 +343,26 @@ export const CategoryPrefix = styled.div`
   @media (max-width: 580px) {
     height: 10px;
   }
+`;
+
+export const CustomIcon = styled(Icon)`
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+
+  svg {
+    transition: 0.2s ease;
+    fill: ${props => props.color || "#000"};
+
+    :hover {
+      fill: ${props => (props.color ? "hsl(0, 0%, 60%)" : "#000")};
+    }
+  }
+`;
+
+export const SelectContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 export const Select = styled(RSelect)`
   width: 200px;
@@ -389,7 +427,7 @@ const TopLineContainer = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 580px) {
+  @media (max-width: 670px) {
     :not(:last-child) {
       margin-top: 15px;
     }
@@ -483,8 +521,8 @@ const StyledTodoIcon = styled.div`
   }
 `;
 
-const TodoIcon = ({ component: Component, active = false }) => (
-  <StyledTodoIcon active={active}>
+const TodoIcon = ({ component: Component, active = false, ...rest }) => (
+  <StyledTodoIcon active={active} {...rest}>
     <Component />
   </StyledTodoIcon>
 );
@@ -524,26 +562,6 @@ TodoItem.Text = TodoText;
 TodoItem.Date = TodoDate;
 TodoList.Item = TodoItem;
 TodoList.Container = TodoContainer;
-
-export const Button = styled.div`
-  border-radius: 10px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-
-  background: linear-gradient(135deg, #60cbf2, #0340a0);
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
-  padding: 15px 55px;
-  text-align: center;
-  max-width: 200px;
-  margin: 0 auto;
-
-  @media (max-width: 960px) {
-    padding: 12px 35px;
-    font-size: 14px;
-  }
-`;
 
 export const Dropdown = styled(AntdDropdown)`
   margin: 0 auto;

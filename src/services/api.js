@@ -15,7 +15,11 @@ const API_GET_TODOS = `${API_URL}/todos`;
 const API_LOGOUT = `${API_URL}/logout`;
 const API_GET_USER_PROFILE = `${API_URL}/user`;
 const API_CREATE_TODO = `${API_URL}/todos`;
+const API_UPDATE_TODO = `${API_URL}/todos`;
+
 const API_GET_TODOS_BY_CATEGORY = `${API_URL}/todos`;
+const API_CREATE_CATEGORY = `${API_URL}/categories`;
+const API_DELETE_CATEGORY = `${API_URL}/categories`;
 
 const parseErrors = ({ response: { data } }) => {
   let errors = [];
@@ -52,6 +56,50 @@ const createTodo = async body => {
     });
 
     if (status !== 201) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
+const createCategory = async body => {
+  try {
+    const { data, status } = await axios({
+      method: "POST",
+      url: API_CREATE_CATEGORY,
+      data: body
+    });
+
+    if (status !== 201) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
+const deleteCategory = async id => {
+  try {
+    const { data, status } = await axios({
+      method: "DELETE",
+      url: `${API_DELETE_CATEGORY}/${id}`
+    });
+
+    if (status !== 200) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
+const updateTodo = async (categoryId, todoId, body) => {
+  try {
+    const { data, status } = await axios({
+      method: "PUT",
+      url: `${API_UPDATE_TODO}/${categoryId}/${todoId}`,
+      data: body
+    });
+
+    if (status !== 200) throw new Error("The request failed");
     return data;
   } catch (error) {
     throw new Error(parseErrors(error));
@@ -131,5 +179,8 @@ export default {
   getTodosByCategory,
   logoutUser,
   getUserProfile,
-  createTodo
+  createTodo,
+  updateTodo,
+  createCategory,
+  deleteCategory
 };

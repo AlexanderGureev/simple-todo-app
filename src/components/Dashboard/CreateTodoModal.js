@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { Form, Input, Checkbox, message, Modal } from "antd";
-import { Button } from "./styles";
+import { Button } from "../Common/styles";
 
 const CreateTodo = ({ form, handleCreateNewTodo }) => {
   const createTodo = useStoreActions(actions => actions.session.createTodo);
   const activeCategory = useStoreState(state => state.session.activeCategory);
+  const { categories } = useStoreState(state => state.session.profile);
 
   const [visible, setVisible] = useState(false);
   const { getFieldDecorator } = form;
@@ -36,7 +37,9 @@ const CreateTodo = ({ form, handleCreateNewTodo }) => {
 
   return (
     <>
-      <Button onClick={handleCreateTask}>New Task</Button>
+      <Button onClick={handleCreateTask} disabled={!categories.length}>
+        New Task
+      </Button>
       <Modal
         visible={visible}
         title="Create Todo"
@@ -72,4 +75,4 @@ const CreateTodo = ({ form, handleCreateNewTodo }) => {
   );
 };
 
-export default Form.create({ name: "create-todo-form" })(CreateTodo);
+export default Form.create({ name: "createTodoForm" })(CreateTodo);

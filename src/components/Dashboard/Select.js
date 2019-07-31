@@ -1,6 +1,13 @@
 import React from "react";
 import { useStoreState, useStoreActions } from "easy-peasy";
-import { Select } from "./styles";
+import {
+  Select,
+  SelectContainer,
+  CustomIcon as DeleteCategoryBtn
+} from "./styles";
+import CreateCategory from "./CreateCategoryModal";
+import DeleteCategory from "./DeleteCategory";
+import { ReactComponent as RemoveIcon } from "./img/remove.svg";
 
 const IndicatorSeparator = () => null;
 
@@ -21,13 +28,17 @@ const SelectComponent = () => {
   const onChange = ({ id }) => setActiveCategory(id);
 
   return (
-    <Select
-      options={getOptions()}
-      defaultValue={getOptions().find(({ id }) => id === activeCategory)}
-      isSearchable={false}
-      components={{ IndicatorSeparator }}
-      onChange={onChange}
-    />
+    <SelectContainer>
+      <Select
+        options={getOptions()}
+        value={getOptions().find(({ id }) => id === activeCategory)}
+        isSearchable={false}
+        components={{ IndicatorSeparator }}
+        onChange={onChange}
+      />
+      <CreateCategory />
+      <DeleteCategory />
+    </SelectContainer>
   );
 };
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { message, Form as AntdForm } from "antd";
 import { useStoreActions } from "easy-peasy";
-import { Form, Button, Input } from "./styles";
+import { Form, Input } from "./styles";
+import { Button } from "../Common/styles";
 import { validateRules, hasErrors } from "./validateRules";
 import googleIcon from "./img/google-soc.svg";
 import fbIcon from "./img/fb-soc.svg";
