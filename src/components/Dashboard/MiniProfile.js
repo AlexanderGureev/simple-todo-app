@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStoreState } from "easy-peasy";
 import { Profile } from "./styles";
-import avaIcon from "./img/ava.jpg";
+import Avatar from "./Avatar";
 
 const data = [
   {
@@ -24,7 +24,7 @@ const MiniProfile = () => {
   const { username, email } = useStoreState(state => state.session.profile);
   return (
     <Profile>
-      <Profile.Avatar src={avaIcon} />
+      <Avatar />
       <Profile.Name>{username}</Profile.Name>
       <Profile.Email>{email}</Profile.Email>
       <Profile.Statistics>

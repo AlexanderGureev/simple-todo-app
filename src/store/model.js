@@ -76,7 +76,8 @@ const model = {
       username: "",
       id: "",
       categories: [],
-      friends: []
+      friends: [],
+      avatarPath: ""
     },
     filterOptions: {},
     activeCategory: "",

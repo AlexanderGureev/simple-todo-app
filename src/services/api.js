@@ -3,17 +3,22 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 const API_VERSION = "v1";
-const API_BASE_URL_LOCAL = `http://localhost:8080/${API_VERSION}`;
-const API_BASE_URL = `https://api-hapi-todo.herokuapp.com/${API_VERSION}`;
+const API_HOST_LOCAL = "http://localhost:8080";
+const API_HOST = "https://api-hapi-todo.herokuapp.com";
 
-const API_URL =
+const API_BASE_URL_LOCAL = `${API_HOST_LOCAL}/${API_VERSION}`;
+const API_BASE_URL = `${API_HOST}/${API_VERSION}`;
+
+export const API_URL =
   process.env.NODE_ENV === "production" ? API_BASE_URL : API_BASE_URL_LOCAL;
+export const API_PUBLIC_URL =
+  process.env.NODE_ENV === "production" ? API_HOST : API_HOST_LOCAL;
 
 const API_LOGIN_URL = `${API_URL}/login`;
 const API_REGISTER_URL = `${API_URL}/register`;
 const API_GET_TODOS = `${API_URL}/todos`;
 const API_LOGOUT = `${API_URL}/logout`;
-const API_GET_USER_PROFILE = `${API_URL}/user`;
+const API_GET_USER_PROFILE = `${API_URL}/users`;
 const API_CREATE_TODO = `${API_URL}/todos`;
 const API_UPDATE_TODO = `${API_URL}/todos`;
 

@@ -2,14 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import RSelect from "react-select";
-
 import {
   Menu as AntdMenu,
   Dropdown as AntdDropdown,
   Icon,
   Row as AntdRow,
-  Col as AntdCol
+  Col as AntdCol,
+  Avatar as AvaBox,
+  Upload
 } from "antd";
+import uploadIcon from "./img/upload.svg";
 
 export const Row = styled(AntdRow)``;
 export const Col = styled(AntdCol)`
@@ -106,21 +108,64 @@ export const Profile = styled(PositionWrapper)`
     border-top: 1px solid #d1d1d1;
   }
 `;
-const Avatar = styled.div`
-  margin: 0 auto;
-  border-radius: 5px;
-  background: url(${props => props.src}) no-repeat top center;
-  background-size: cover;
-  width: 70px;
-  height: 70px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px;
 
-  @media (max-width: 991px) {
-    width: 50px;
-    height: 50px;
+export const Avatar = styled(AvaBox)`
+  && {
+    > img {
+      height: auto;
+    }
+    width: 70px;
+    height: 70px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    position: relative;
+    border-radius: 5px;
+    cursor: pointer;
+
+    ::before {
+      border-radius: 5px;
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transition: 0.3s ease;
+    }
+    ::after {
+      content: "";
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      top: 23px;
+      left: 23px;
+      opacity: 0;
+      transition: 0.3s ease;
+      background: url(${uploadIcon});
+      background-size: cover;
+    }
+    :hover::after,
+    :hover::before {
+      opacity: 1;
+    }
+
+    @media (max-width: 991px) {
+      width: 50px;
+      height: 50px;
+
+      ::after {
+        width: 20px;
+        height: 20px;
+        top: 15px;
+        left: 15px;
+      }
+    }
   }
 `;
+
 const Name = styled.p`
   font-weight: 500;
   font-size: 20px;
@@ -584,3 +629,21 @@ export const MenuBtn = styled(Icon)`
   font-size: 23px;
   cursor: pointer;
 `;
+
+export const Dragger = styled(Upload.Dragger)`
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const DraggerIcon = styled(Icon)`
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+  margin-bottom: 10px;
+`;
+const DraggerText = styled.p``;
+const DraggerContainer = styled.div``;
+Dragger.Container = DraggerContainer;
+Dragger.Icon = DraggerIcon;
+Dragger.Text = DraggerText;
