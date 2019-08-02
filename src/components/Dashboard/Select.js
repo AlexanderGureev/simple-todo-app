@@ -1,15 +1,11 @@
 import React from "react";
 import { useStoreState, useStoreActions } from "easy-peasy";
-import {
-  Select,
-  SelectContainer,
-  CustomIcon as DeleteCategoryBtn
-} from "./styles";
+import { Select, SelectContainer } from "./styles";
 import CreateCategory from "./CreateCategoryModal";
 import DeleteCategory from "./DeleteCategory";
-import { ReactComponent as RemoveIcon } from "./img/remove.svg";
 
 const IndicatorSeparator = () => null;
+const defaultCategory = { value: "No categories", label: "No categories" };
 
 const SelectComponent = () => {
   const { categories } = useStoreState(state => state.session.profile);
@@ -31,7 +27,10 @@ const SelectComponent = () => {
     <SelectContainer>
       <Select
         options={getOptions()}
-        value={getOptions().find(({ id }) => id === activeCategory)}
+        value={
+          getOptions().find(({ id }) => id === activeCategory) ||
+          defaultCategory
+        }
         isSearchable={false}
         components={{ IndicatorSeparator }}
         onChange={onChange}

@@ -38,7 +38,6 @@ const sessionEffects = {
       actions.updateProfileAction({
         categories: [...profile.categories, newCategory]
       });
-      console.log(newCategory);
       actions.setActiveCategory(newCategory.id);
       return newCategory;
     }

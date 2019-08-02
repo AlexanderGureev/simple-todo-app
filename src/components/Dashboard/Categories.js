@@ -1,8 +1,7 @@
 import React from "react";
 import { AutoSizer, List } from "react-virtualized";
 import { useStoreState } from "easy-peasy";
-import { Empty } from "antd";
-import { Categories } from "./styles";
+import { Categories, Empty } from "./styles";
 
 const list = [
   { color: "#0223AD", text: "Development" },

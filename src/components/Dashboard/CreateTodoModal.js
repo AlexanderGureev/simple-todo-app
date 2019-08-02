@@ -22,15 +22,21 @@ const CreateTodo = ({ form, handleCreateNewTodo }) => {
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFields(async (err, values) => {
-      if (!err) {
-        const data = await createTodo({
-          ...values,
-          categoryId: activeCategory
-        });
-        message.success("Created new todo!");
+      try {
+        if (!err) {
+          const data = await createTodo({
+            ...values,
+            categoryId: activeCategory
+          });
+          message.success("Created new todo!");
 
-        handleCreateNewTodo(data);
+          handleCreateNewTodo(data);
+          onClose();
+        }
+      } catch (error) {
+        message.error(`Todo creation error`);
         onClose();
+        console.log(error);
       }
     });
   };

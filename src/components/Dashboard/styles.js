@@ -9,7 +9,8 @@ import {
   Row as AntdRow,
   Col as AntdCol,
   Avatar as AvaBox,
-  Upload
+  Upload,
+  Empty as AntdEmpty
 } from "antd";
 import uploadIcon from "./img/upload.svg";
 
@@ -342,18 +343,25 @@ export const Friends = styled(Categories)`
   ::after {
     display: none;
   }
+  padding: 30px 0 10px 0;
 `;
 const FriendsTitle = styled(CategoriestTitle)``;
 const FriendItem = styled.div`
   padding: 0 10px;
 `;
 const FriendAva = styled(Avatar)`
-  width: 40px;
-  height: 40px;
+  && {
+    width: 35px;
+    height: 35px;
 
-  @media (max-width: 991px) {
-    width: 30px;
-    height: 30px;
+    @media (max-width: 991px) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  ::after {
+    display: none;
   }
 `;
 const FriendsContainer = styled.div`
@@ -372,11 +380,10 @@ export const TopLine = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 60px 20px 30px;
-  @media (max-width: 960px) {
-    padding: 30px;
-  }
+  padding: 30px;
+
   @media (max-width: 670px) {
+    padding: 20px;
     flex-direction: column-reverse;
   }
 `;
@@ -410,22 +417,29 @@ export const SelectContainer = styled.div`
   align-items: center;
 `;
 export const Select = styled(RSelect)`
-  width: 200px;
+  width: 300px;
   color: #3b3b3b;
-
   font-weight: 400;
 
-  @media (max-width: 991px) {
-    width: 130px;
+  @media (max-width: 1360px) {
+    width: 200px;
+  }
+
+  @media (max-width: 760px) {
+    width: 150px;
+  }
+
+  @media (max-width: 360px) {
+    width: 120px;
   }
 
   > div {
-    font-size: 25px;
+    font-size: 23px;
     border: none;
     outline: none;
     box-shadow: none;
     @media (max-width: 1200px) {
-      font-size: 23px;
+      font-size: 20px;
     }
 
     @media (max-width: 991px) {
@@ -457,15 +471,24 @@ const FilterItem = styled.div`
   &:not(:last-child) {
     margin-right: 30px;
 
-    @media (max-width: 991px) {
-      margin-right: 15px;
+    @media (max-width: 1200px) {
+      margin-right: 10px;
+    }
+    @media (max-width: 460px) {
+      margin-right: 5px;
     }
   }
-  @media (max-width: 1200px) {
+
+  @media (max-width: 1400px) {
     font-size: 14px;
   }
-  @media (max-width: 991px) {
+
+  @media (max-width: 1200px) {
     font-size: 12px;
+  }
+
+  @media (max-width: 360px) {
+    font-size: 10px;
   }
 `;
 const TopLineContainer = styled.div`
@@ -647,3 +670,9 @@ const DraggerContainer = styled.div``;
 Dragger.Container = DraggerContainer;
 Dragger.Icon = DraggerIcon;
 Dragger.Text = DraggerText;
+
+export const Empty = styled(AntdEmpty)`
+  && {
+    margin: 10px 0;
+  }
+`;

@@ -1,7 +1,6 @@
 import React from "react";
 import { useStoreState } from "easy-peasy";
-import { Empty } from "antd";
-import { Friends } from "./styles";
+import { Friends, Empty } from "./styles";
 import avaIcon from "./img/ava.jpg";
 
 const FriendsComponent = () => {
