@@ -23,11 +23,11 @@ function beforeUpload(file) {
 
 const ProfileHeader = () => {
   const { avatarPath } = useStoreState(state => state.session.profile);
-  // const { updateAvatar } = useStoreActions(actions => actions.session);
+  const { changeAvatar } = useStoreActions(actions => actions.session);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const changeAvatar = () => setVisible(true);
 
+  const handleClick = () => setVisible(true);
   const handleOk = () => setVisible(false);
   const handleCancel = () => setVisible(false);
 
@@ -39,12 +39,10 @@ const ProfileHeader = () => {
         setLoading(true);
         const formData = new FormData();
         formData.append("file", file);
-
-        console.log(file);
-        // await updateAvatarAction(formData);
-        // setLoading(false);
-        // setVisible(false);
-        // onSuccess();
+        await changeAvatar(formData);
+        setLoading(false);
+        setVisible(false);
+        onSuccess();
       } catch (error) {
         setLoading(false);
         onError();
@@ -84,7 +82,7 @@ const ProfileHeader = () => {
           )}
         </Dragger>
       </Modal>
-      <Avatar src={`${API_PUBLIC_URL}${avatarPath}`} onClick={changeAvatar} />
+      <Avatar src={`${API_PUBLIC_URL}${avatarPath}`} onClick={handleClick} />
     </>
   );
 };

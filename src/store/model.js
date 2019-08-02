@@ -25,6 +25,19 @@ const sessionEffects = {
     const data = await Api.createTodo(payload);
     return data;
   }),
+  uploadFile: thunk(async (actions, payload, { injections: { Api } }) => {
+    const data = await Api.uploadFile(payload);
+    return data;
+  }),
+  changeAvatar: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const { profile } = getState();
+      const { path } = await actions.uploadFile(payload);
+      const updatedUserProfile = await Api.updateUserProfile(profile.id, path);
+      actions.updateProfileAction(updatedUserProfile);
+      return updatedUserProfile;
+    }
+  ),
   changeStatusTodo: thunk(
     async (actions, { categoryId, todoId, body }, { injections: { Api } }) => {
       const data = await Api.updateTodo(categoryId, todoId, body);
