@@ -15,17 +15,27 @@ const SelectComponent = () => {
   );
 
   const getOptions = () =>
-    categories.map(({ name, id }) => ({
+    categories.map(({ name, id, color }) => ({
       value: name,
       label: name,
-      id
+      id,
+      color
     }));
 
   const onChange = ({ id }) => setActiveCategory(id);
 
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: "rgba(0,0,0,.9)",
+      backgroundColor: state.isFocused ? state.data.color : "#fff"
+    })
+  };
+
   return (
     <SelectContainer>
       <Select
+        styles={customStyles}
         options={getOptions()}
         value={
           getOptions().find(({ id }) => id === activeCategory) ||

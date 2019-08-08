@@ -100,6 +100,20 @@ const sessionEffects = {
       return newCategory;
     }
   ),
+  updateCategory: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const { activeCategory, profile } = getState();
+      const updatedCategory = await Api.updateCategoryById(
+        activeCategory,
+        payload
+      );
+      const newStateCategories = profile.categories.map(category =>
+        category.id === updatedCategory.id ? updatedCategory : category
+      );
+      actions.updateCategoriesAction(newStateCategories);
+      return updatedCategory;
+    }
+  ),
   deleteCategory: thunk(
     async (actions, payload, { injections: { Api }, getState }) => {
       const { profile } = getState();
@@ -174,6 +188,10 @@ const model = {
     updateStatisticsAction: action((state, payload) => ({
       ...state,
       statistics: { ...state.statistics, ...payload }
+    })),
+    updateCategoriesAction: action((state, payload) => ({
+      ...state,
+      profile: { ...state.profile, categories: payload }
     })),
     changeAuthStatusAction: action((state, payload) => ({
       ...state,

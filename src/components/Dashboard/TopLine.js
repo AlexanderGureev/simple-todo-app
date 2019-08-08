@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useStoreActions } from "easy-peasy";
 import { v4 } from "uuid";
-import { TopLine, Filters, CategoryPrefix } from "./styles";
+import { TopLine, Filters } from "./styles";
 import Select from "./Select";
+import CategoryPrefix from "./CategoryPrefix";
 
 const filters = [
   { id: v4(), text: "All", filter: {} },
@@ -23,7 +24,7 @@ const TopLineComponent = () => {
   return (
     <TopLine>
       <TopLine.Container>
-        <CategoryPrefix color="#0223AD" />
+        <CategoryPrefix />
         <Select />
       </TopLine.Container>
       <TopLine.Container>

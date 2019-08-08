@@ -25,6 +25,7 @@ const API_UPDATE_TODO = `${API_URL}/todos`;
 const API_GET_TODOS_BY_CATEGORY = `${API_URL}/todos`;
 const API_CREATE_CATEGORY = `${API_URL}/categories`;
 const API_DELETE_CATEGORY = `${API_URL}/categories`;
+const API_UPDATE_CATEGORY = `${API_URL}/categories`;
 const API_UPLOAD_FILE = `${API_URL}/files`;
 const API_REMOVE_FILE = `${API_URL}/files`;
 const API_UPDATE_USER_PROFILE = `${API_URL}/users`;
@@ -221,6 +222,20 @@ const updateUserProfile = async (userId, body) => {
   }
 };
 
+const updateCategoryById = async (categoryId, body) => {
+  try {
+    const { data, status } = await axios({
+      method: "PATCH",
+      url: `${API_UPDATE_CATEGORY}/${categoryId}`,
+      data: body
+    });
+    if (![200, 204].includes(status)) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
 export default {
   authUser,
   registerUser,
@@ -235,5 +250,6 @@ export default {
   uploadFile,
   updateUserProfile,
   removeFile,
+  updateCategoryById,
   API_PUBLIC_URL
 };

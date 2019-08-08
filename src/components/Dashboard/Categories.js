@@ -3,35 +3,12 @@ import { AutoSizer, List } from "react-virtualized";
 import { useStoreState } from "easy-peasy";
 import { Categories, Empty } from "./styles";
 
-const list = [
-  { color: "#0223AD", text: "Development" },
-  { color: "#22CBBE", text: "Design" },
-  { color: "#D90799", text: "Management" },
-  { color: "#7CE216", text: "Home" },
-  { color: "#0223AD", text: "Development" },
-  { color: "#22CBBE", text: "Design" },
-  { color: "#D90799", text: "Management" },
-  { color: "#7CE216", text: "Home" },
-  { color: "#0223AD", text: "Development" },
-  { color: "#22CBBE", text: "Design" },
-  { color: "#D90799", text: "Management" },
-  { color: "#7CE216", text: "Home" },
-  { color: "#0223AD", text: "Development" },
-  { color: "#22CBBE", text: "Design" },
-  { color: "#D90799", text: "Management" },
-  { color: "#7CE216", text: "Home" },
-  { color: "#0223AD", text: "Development" },
-  { color: "#22CBBE", text: "Design" },
-  { color: "#D90799", text: "Management" },
-  { color: "#7CE216", text: "Home" }
-];
-
 const CategoriesComponent = () => {
   const { categories } = useStoreState(state => state.session.profile);
 
   function rowRenderer({ key, index, style }) {
     return (
-      <Categories.Item color={list[index].color} key={key} style={style}>
+      <Categories.Item color={categories[index].color} key={key} style={style}>
         {categories[index].name}
       </Categories.Item>
     );

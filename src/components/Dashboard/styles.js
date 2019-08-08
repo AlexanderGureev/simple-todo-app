@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import RSelect from "react-select";
 import {
@@ -14,6 +14,7 @@ import {
   Button,
   Modal as AntdModal
 } from "antd";
+import { TwitterPicker } from "react-color";
 import uploadIcon from "./img/upload.svg";
 
 export const Row = styled(AntdRow)``;
@@ -389,15 +390,6 @@ export const TopLine = styled.div`
     flex-direction: column-reverse;
   }
 `;
-export const CategoryPrefix = styled.div`
-  background-color: ${props => props.color};
-  width: 10px;
-  height: 30px;
-
-  @media (max-width: 580px) {
-    height: 10px;
-  }
-`;
 
 export const CustomIcon = styled(Icon)`
   font-size: 14px;
@@ -696,5 +688,55 @@ export const ModalBtnGroup = styled.div`
   order: ${props => props.order || 0};
   ${ModalBtn}:not(:last-child) {
     margin-right: 10px;
+  }
+`;
+
+export const CategoryPrefix = styled.div`
+  cursor: pointer;
+  background-color: ${props => props.color};
+  width: 10px;
+  height: 30px;
+
+  @media (max-width: 580px) {
+    height: 10px;
+  }
+`;
+
+export const CategoryPrefixContainer = ({ children, className, ...rest }) => (
+  <CategoryPrefix className={className} {...rest}>
+    {children}
+  </CategoryPrefix>
+);
+
+export const ColorPickerWrapper = styled.div`
+  position: relative;
+`;
+export const ColorPicker = styled(TwitterPicker)`
+  && {
+    top: 50px;
+    width: 250px !important;
+    position: absolute !important;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+    border: none !important;
+
+    span div {
+      transition: 0.3s ease;
+
+      :hover {
+        transform: scale(1.1);
+      }
+    }
+
+    @media (max-width: 670px) {
+      top: 30px;
+      div:last-child > div:first-child,
+      span div {
+        width: 20px !important;
+        height: 20px !important;
+      }
+
+      width: 195px !important;
+    }
   }
 `;
