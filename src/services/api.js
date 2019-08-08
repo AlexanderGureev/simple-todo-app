@@ -26,6 +26,7 @@ const API_GET_TODOS_BY_CATEGORY = `${API_URL}/todos`;
 const API_CREATE_CATEGORY = `${API_URL}/categories`;
 const API_DELETE_CATEGORY = `${API_URL}/categories`;
 const API_UPLOAD_FILE = `${API_URL}/files`;
+const API_REMOVE_FILE = `${API_URL}/files`;
 const API_UPDATE_USER_PROFILE = `${API_URL}/users`;
 
 const parseErrors = ({ response: { data } }) => {
@@ -91,7 +92,7 @@ const deleteCategory = async id => {
       url: `${API_DELETE_CATEGORY}/${id}`
     });
 
-    if (status !== 200) throw new Error("The request failed");
+    if (![200, 204].includes(status)) throw new Error("The request failed");
     return data;
   } catch (error) {
     throw new Error(parseErrors(error));
@@ -106,7 +107,7 @@ const updateTodo = async (categoryId, todoId, body) => {
       data: body
     });
 
-    if (status !== 200) throw new Error("The request failed");
+    if (![200, 204].includes(status)) throw new Error("The request failed");
     return data;
   } catch (error) {
     throw new Error(parseErrors(error));
@@ -193,19 +194,33 @@ const uploadFile = async formData => {
   }
 };
 
-const updateUserProfile = async (userId, avatarPath) => {
+const removeFile = async fileName => {
   try {
     const { data, status } = await axios({
-      method: "PATCH",
-      url: `${API_UPDATE_USER_PROFILE}/${userId}`,
-      data: { avatarPath }
+      method: "DELETE",
+      url: `${API_REMOVE_FILE}/${fileName}`
     });
-    if (status !== 201) throw new Error("The request failed");
+    if (![200, 204].includes(status)) throw new Error("The request failed");
     return data;
   } catch (error) {
     throw new Error(parseErrors(error));
   }
 };
+
+const updateUserProfile = async (userId, body) => {
+  try {
+    const { data, status } = await axios({
+      method: "PATCH",
+      url: `${API_UPDATE_USER_PROFILE}/${userId}`,
+      data: body
+    });
+    if (![200, 204].includes(status)) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
 export default {
   authUser,
   registerUser,
@@ -218,5 +233,7 @@ export default {
   createCategory,
   deleteCategory,
   uploadFile,
-  updateUserProfile
+  updateUserProfile,
+  removeFile,
+  API_PUBLIC_URL
 };

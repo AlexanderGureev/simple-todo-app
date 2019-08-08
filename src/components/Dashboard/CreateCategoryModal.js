@@ -27,11 +27,11 @@ const CreateCategory = ({ form }) => {
         try {
           const { name } = await createCategory(values);
           message.success(`Category ${name} success created.`);
-          onClose();
         } catch (error) {
           message.error(`Сategory creation error`);
-          onClose();
           console.log(error);
+        } finally {
+          onClose();
         }
       }
     });

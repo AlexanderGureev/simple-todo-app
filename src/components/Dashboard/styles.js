@@ -10,7 +10,9 @@ import {
   Col as AntdCol,
   Avatar as AvaBox,
   Upload,
-  Empty as AntdEmpty
+  Empty as AntdEmpty,
+  Button,
+  Modal as AntdModal
 } from "antd";
 import uploadIcon from "./img/upload.svg";
 
@@ -674,5 +676,25 @@ Dragger.Text = DraggerText;
 export const Empty = styled(AntdEmpty)`
   && {
     margin: 10px 0;
+  }
+`;
+
+export const Modal = styled(AntdModal)`
+  .ant-modal-footer {
+    padding: 10px 24px;
+  }
+`;
+export const ModalFooterContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+export const ModalBtn = styled(Button)`
+  order: ${props => props.order || 0};
+`;
+export const ModalBtnGroup = styled.div`
+  display: flex;
+  order: ${props => props.order || 0};
+  ${ModalBtn}:not(:last-child) {
+    margin-right: 10px;
   }
 `;

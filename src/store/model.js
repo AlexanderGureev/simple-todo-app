@@ -1,5 +1,7 @@
 import { action, thunk } from "easy-peasy";
 
+const DEFAULT_AVATAR_PATH = `/upload/ava_default.png`;
+
 const sessionEffects = {
   registerUser: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.registerUser(payload);
@@ -21,26 +23,69 @@ const sessionEffects = {
       return data;
     }
   ),
-  createTodo: thunk(async (actions, payload, { injections: { Api } }) => {
-    const data = await Api.createTodo(payload);
-    return data;
-  }),
+  createTodo: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const { statistics } = getState();
+      const createdTodo = await Api.createTodo(payload);
+      const updatedStat = {
+        ...statistics,
+        count: statistics.count + 1,
+        primary: createdTodo.primary
+          ? statistics.primary + 1
+          : statistics.primary
+      };
+      actions.updateStatisticsAction(updatedStat);
+      return createdTodo;
+    }
+  ),
   uploadFile: thunk(async (actions, payload, { injections: { Api } }) => {
     const data = await Api.uploadFile(payload);
     return data;
   }),
-  changeAvatar: thunk(
+  removeFile: thunk(async (actions, payload, { injections: { Api } }) => {
+    const data = await Api.removeFile(payload);
+    return data;
+  }),
+  updateAvatar: thunk(
     async (actions, payload, { injections: { Api }, getState }) => {
       const { profile } = getState();
       const { path } = await actions.uploadFile(payload);
-      const updatedUserProfile = await Api.updateUserProfile(profile.id, path);
-      actions.updateProfileAction(updatedUserProfile);
-      return updatedUserProfile;
+      const { avatarPath } = await Api.updateUserProfile(profile.id, {
+        avatarPath: path
+      });
+      actions.updateProfileAction({ avatarPath });
+      return avatarPath;
+    }
+  ),
+  deleteAvatar: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const { profile } = getState();
+      const [, updatedProfile] = await Promise.all([
+        actions.removeFile(payload),
+        Api.updateUserProfile(profile.id, { avatarPath: DEFAULT_AVATAR_PATH })
+      ]);
+      actions.updateProfileAction(updatedProfile);
     }
   ),
   changeStatusTodo: thunk(
-    async (actions, { categoryId, todoId, body }, { injections: { Api } }) => {
+    async (
+      actions,
+      { categoryId, todoId, body },
+      { injections: { Api }, getState }
+    ) => {
+      const { statistics } = getState();
       const data = await Api.updateTodo(categoryId, todoId, body);
+
+      const completed =
+        body.status === "completed"
+          ? statistics.completed + 1
+          : statistics.completed - 1;
+
+      actions.updateStatisticsAction({
+        ...statistics,
+        completed
+      });
+
       return data;
     }
   ),
@@ -63,6 +108,7 @@ const sessionEffects = {
         ({ id }) => id !== deletedCategory.id
       );
       actions.updateProfileAction({ categories: filteredCategories });
+      await actions.getStatistics();
       return deletedCategory;
     }
   ),
@@ -78,6 +124,25 @@ const sessionEffects = {
     } catch (error) {
       console.log(error);
     }
+  }),
+  getStatistics: thunk(async (actions, payload, { injections: { Api } }) => {
+    const todosByCategory = await Api.getTodos();
+    const stat = todosByCategory.reduce(
+      (acc, { todos }) => ({
+        ...acc,
+        count: acc.count + todos.length,
+        completed:
+          acc.completed +
+          todos.filter(({ status }) => status === "completed").length,
+        primary: acc.primary + todos.filter(({ primary }) => primary).length
+      }),
+      {
+        count: 0,
+        completed: 0,
+        primary: 0
+      }
+    );
+    actions.updateStatisticsAction(stat);
   })
 };
 
@@ -91,13 +156,24 @@ const model = {
       friends: [],
       avatarPath: ""
     },
+    statistics: {
+      count: 0,
+      completed: 0,
+      primary: 0
+    },
     filterOptions: {},
     activeCategory: "",
     isAuth: false,
     updateProfileAction: action((state, payload) => ({
       ...state,
       profile: { ...state.profile, ...payload },
-      activeCategory: payload.categories.length ? payload.categories[0].id : ""
+      activeCategory:
+        payload.categories &&
+        (payload.categories.length ? payload.categories[0].id : "")
+    })),
+    updateStatisticsAction: action((state, payload) => ({
+      ...state,
+      statistics: { ...state.statistics, ...payload }
     })),
     changeAuthStatusAction: action((state, payload) => ({
       ...state,

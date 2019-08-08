@@ -1,44 +1,65 @@
-import React, { useState } from "react";
-import { useStoreState } from "easy-peasy";
+import React, { useState, useEffect } from "react";
+import { useStoreState, useStoreActions } from "easy-peasy";
 import { Profile } from "./styles";
+import Preloader from "../Common/Preloader";
 import Avatar from "./Avatar";
 
 const data = [
   {
-    num: "12",
-    title: "Completed",
-    caption: "tasks"
-  },
-  {
-    num: "22",
+    key: "count",
     title: "To do",
     caption: "tasks"
   },
   {
-    num: "12",
-    title: "All",
-    caption: "completed"
+    key: "completed",
+    title: "Completed",
+    caption: "tasks"
+  },
+  {
+    key: "primary",
+    title: "Primary",
+    caption: "tasks"
   }
 ];
+
 const MiniProfile = () => {
-  const { username, email } = useStoreState(state => state.session.profile);
+  const { profile, statistics } = useStoreState(state => state.session);
+  const { getStatistics } = useStoreActions(actions => actions.session);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    getStatistics()
+      .then(() => setLoading(false))
+      .catch(error => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [getStatistics]);
+
   return (
     <Profile>
       <Avatar />
-      <Profile.Name>{username}</Profile.Name>
-      <Profile.Email>{email}</Profile.Email>
+      <Profile.Name>{profile.username}</Profile.Name>
+      <Profile.Email>{profile.email}</Profile.Email>
       <Profile.Statistics>
-        {data.map(({ num, title, caption }, index) => (
-          <Profile.Statistics.Item key={index}>
-            <Profile.Statistics.Item.Num>{num}</Profile.Statistics.Item.Num>
-            <Profile.Statistics.Item.Title>
-              {title}
-            </Profile.Statistics.Item.Title>
-            <Profile.Statistics.Item.Caption>
-              {caption}
-            </Profile.Statistics.Item.Caption>
-          </Profile.Statistics.Item>
-        ))}
+        {loading ? (
+          <Preloader />
+        ) : (
+          data.map(({ key, title, caption }) => (
+            <Profile.Statistics.Item key={key}>
+              <Profile.Statistics.Item.Num>
+                {statistics[key]}
+              </Profile.Statistics.Item.Num>
+              <Profile.Statistics.Item.Title>
+                {title}
+              </Profile.Statistics.Item.Title>
+              <Profile.Statistics.Item.Caption>
+                {caption}
+              </Profile.Statistics.Item.Caption>
+            </Profile.Statistics.Item>
+          ))
+        )}
       </Profile.Statistics>
     </Profile>
   );

@@ -29,14 +29,13 @@ const CreateTodo = ({ form, handleCreateNewTodo }) => {
             categoryId: activeCategory
           });
           message.success("Created new todo!");
-
           handleCreateNewTodo(data);
-          onClose();
         }
       } catch (error) {
         message.error(`Todo creation error`);
-        onClose();
         console.log(error);
+      } finally {
+        onClose();
       }
     });
   };

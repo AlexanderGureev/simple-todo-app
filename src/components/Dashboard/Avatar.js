@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import { message, Modal } from "antd";
+import { message } from "antd";
 // eslint-disable-next-line import/no-unresolved
 import { LoopingRhombusesSpinner } from "react-epic-spinners";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { Dragger, Avatar } from "./styles";
+import {
+  Dragger,
+  Avatar,
+  ModalBtn,
+  ModalFooterContainer,
+  ModalBtnGroup,
+  Modal
+} from "./styles";
 import { PreloaderContainer } from "../Common/styles";
 import { ReactComponent as UploadFormIcon } from "./img/upload_ava.svg";
 import { API_PUBLIC_URL } from "../../services/api";
 
-function beforeUpload(file) {
+const beforeUpload = file => {
   const allowedExt = ["image/jpeg", "image/png", "image/svg+xml"];
   const isAllowedExt = allowedExt.some(ext => ext === file.type);
   if (!isAllowedExt) {
@@ -19,17 +26,37 @@ function beforeUpload(file) {
     message.error("Image must smaller than 2MB!");
   }
   return isAllowedExt && isLt2M;
-}
+};
+
+const footerTemplate = ({ handleDelete }) => (
+  <ModalFooterContainer>
+    <ModalBtn onClick={handleDelete} type="danger" ghost>
+      Delete avatar
+    </ModalBtn>
+  </ModalFooterContainer>
+);
 
 const ProfileHeader = () => {
   const { avatarPath } = useStoreState(state => state.session.profile);
-  const { changeAvatar } = useStoreActions(actions => actions.session);
+  const { updateAvatar, deleteAvatar } = useStoreActions(
+    actions => actions.session
+  );
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleClick = () => setVisible(true);
-  const handleOk = () => setVisible(false);
+  const openModal = () => setVisible(true);
   const handleCancel = () => setVisible(false);
+  const handleDelete = async () => {
+    try {
+      const fileName = avatarPath.split("/").pop();
+      await deleteAvatar(fileName);
+    } catch (error) {
+      message.error(`File delete failed.`);
+      console.log(error);
+    } finally {
+      setVisible(false);
+    }
+  };
 
   const props = {
     showUploadList: false,
@@ -39,13 +66,14 @@ const ProfileHeader = () => {
         setLoading(true);
         const formData = new FormData();
         formData.append("file", file);
-        await changeAvatar(formData);
-        setLoading(false);
+        await updateAvatar(formData);
         setVisible(false);
         onSuccess();
       } catch (error) {
-        setLoading(false);
+        console.log(error);
         onError();
+      } finally {
+        setLoading(false);
       }
     },
     onChange(info) {
@@ -63,9 +91,9 @@ const ProfileHeader = () => {
       <Modal
         title="Change avatar"
         visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
         multiple={false}
+        onCancel={handleCancel}
+        footer={footerTemplate({ handleDelete })}
       >
         <Dragger {...props}>
           {loading ? (
@@ -82,7 +110,7 @@ const ProfileHeader = () => {
           )}
         </Dragger>
       </Modal>
-      <Avatar src={`${API_PUBLIC_URL}${avatarPath}`} onClick={handleClick} />
+      <Avatar src={`${API_PUBLIC_URL}${avatarPath}`} onClick={openModal} />
     </>
   );
 };
