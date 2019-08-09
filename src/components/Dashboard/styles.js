@@ -535,6 +535,7 @@ const StyledTodoIcon = styled.div`
   margin-right: 15px;
   background-color: ${props => (props.active ? "#72B9FF" : "none")};
   position: relative;
+  transition: background-color 0.3s ease;
 
   @media (max-width: 991px) {
     min-width: 40px;

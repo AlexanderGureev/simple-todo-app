@@ -7,12 +7,12 @@ import {
   InfiniteLoader
 } from "react-virtualized";
 import { useStoreActions, useStoreState } from "easy-peasy";
+import { message } from "antd";
 import { TodoList } from "./styles";
-import { ReactComponent as SettingIcon } from "./img/menu-icon.svg";
-import { ReactComponent as CheckIcon } from "./img/checked.svg";
 import CreateTodo from "./CreateTodoModal";
 import Preloader from "../Common/Preloader";
 import EmptyCategory from "./EmptyCategory";
+import TodoListItem from "./TodoListItem";
 
 const cache = new CellMeasurerCache({
   defaultHeight: 60,
@@ -227,6 +227,10 @@ const TodoListComponent = () => {
         type: "UPDATE_TODOS",
         payload: { todo: updatedTodo, activeCategory }
       });
+
+      if (updatedTodo.status === "completed") {
+        message.success("1 task completed");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -253,20 +257,12 @@ const TodoListComponent = () => {
         rowIndex={index}
       >
         {({ measure }) => (
-          <TodoList.Item key={key} style={style}>
-            <TodoList.Item.Icon component={SettingIcon} />
-            <TodoList.Item.Icon
-              onClick={changeStatusTodoHandle(todosState[index].id)}
-              active={todosState[index].status !== "active"}
-              component={CheckIcon}
-            />
-            <TodoList.Container>
-              <TodoList.Item.Text>{todosState[index].text}</TodoList.Item.Text>
-              <TodoList.Item.Date>
-                {new Date(todosState[index].date).toLocaleDateString()}
-              </TodoList.Item.Date>
-            </TodoList.Container>
-          </TodoList.Item>
+          <TodoListItem
+            key={key}
+            style={style}
+            todo={todosState[index]}
+            onClick={changeStatusTodoHandle(todosState[index].id)}
+          />
         )}
       </CellMeasurer>
     );
