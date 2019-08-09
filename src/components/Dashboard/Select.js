@@ -24,18 +24,9 @@ const SelectComponent = () => {
 
   const onChange = ({ id }) => setActiveCategory(id);
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      color: "rgba(0,0,0,.9)",
-      backgroundColor: state.isFocused ? state.data.color : "#fff"
-    })
-  };
-
   return (
     <SelectContainer>
       <Select
-        styles={customStyles}
         options={getOptions()}
         value={
           getOptions().find(({ id }) => id === activeCategory) ||
