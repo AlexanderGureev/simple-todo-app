@@ -12,7 +12,9 @@ import {
   Upload,
   Empty as AntdEmpty,
   Button,
-  Modal as AntdModal
+  Modal as AntdModal,
+  Popover as AntdPopover,
+  Button as AntdButton
 } from "antd";
 import uploadIcon from "./img/upload.svg";
 
@@ -25,13 +27,12 @@ export const Col = styled(AntdCol)`
   }
 `;
 
-export const EmptyContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+export const SimpleButton = styled(AntdButton)`
+  @media (max-width: 560px) {
+    font-size: 12px;
+  }
 `;
+
 export const Dashboard = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -664,11 +665,69 @@ Dragger.Container = DraggerContainer;
 Dragger.Icon = DraggerIcon;
 Dragger.Text = DraggerText;
 
+export const EmptyContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+
 export const Empty = styled(AntdEmpty)`
   && {
     margin: 10px 0;
   }
 `;
+const EmptyDescription = styled.div`
+  padding: 0 30px;
+`;
+const EmptyHeader = styled.h2`
+  font-size: 16px;
+
+  @media (max-width: 560px) {
+    font-size: 14px;
+  }
+`;
+const EmptyBody = styled.span`
+  font-size: 14px;
+
+  @media (max-width: 560px) {
+    font-size: 12px;
+  }
+`;
+
+Empty.Description = EmptyDescription;
+Empty.Header = EmptyHeader;
+Empty.Body = EmptyBody;
+
+Empty.Image = styled.div``;
+Empty.Footer = styled.div`
+  margin-top: 20px;
+`;
+
+export const Popover = styled(AntdPopover)``;
+export const PopoverTitle = styled.div``;
+export const PopoverTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ContentList = styled.ul`
+  padding: 0 15px;
+
+  @media (max-width: 760px) {
+    width: 280px;
+  }
+
+  @media (max-width: 560px) {
+    width: 200px;
+    font-size: 12px;
+  }
+`;
+const ContentItem = styled.li``;
+ContentList.Item = ContentItem;
 
 export const Modal = styled(AntdModal)`
   .ant-modal-footer {

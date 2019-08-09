@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 export const ColorPickerContainer = styled.div`
+  background: #fff;
   position: absolute;
   z-index: 100;
   top: 40px;

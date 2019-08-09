@@ -242,40 +242,6 @@ export const InputPassword = styled(AntdInput.Password)`
 
 Input.Password = InputPassword;
 
-export const Button = styled(AntdButton)`
-  border: none;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-
-  background: linear-gradient(135deg, #60cbf2, #0340a0);
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
-  padding: 10px 70px;
-  outline: none;
-  transition: 0.3s ease;
-  opacity: ${props => (props.disabled ? ".7" : "1")};
-  height: auto;
-  span {
-    transition: 0.3s ease;
-  }
-
-  :hover[disabled] {
-    color: #fff;
-  }
-
-  :disabled,
-  :hover,
-  :focus {
-    background: linear-gradient(135deg, #60cbf2, #0340a0);
-    color: #fff;
-  }
-  @media (max-width: 490px) {
-    padding: 12px 55px;
-  }
-`;
-
 const FormFooter = styled.div``;
 const FormText = styled.p`
   color: #848080;

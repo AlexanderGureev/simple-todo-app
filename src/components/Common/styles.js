@@ -15,7 +15,6 @@ export const Button = styled(AntdButton)`
   color: #fff;
   font-size: 15px;
   font-weight: 400;
-
   background: linear-gradient(135deg, #60cbf2, #0340a0);
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 92, 182, 0.25);
@@ -29,6 +28,10 @@ export const Button = styled(AntdButton)`
 
   span {
     transition: 0.3s ease;
+  }
+
+  &.ant-btn-loading:not(.ant-btn-circle):not(.ant-btn-circle-outline):not(.ant-btn-icon-only) {
+    padding: 10px 70px;
   }
 
   :hover[disabled] {

@@ -9,6 +9,7 @@ const CreateCategory = ({ form }) => {
     actions => actions.session.createCategory
   );
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { getFieldDecorator } = form;
 
   const onOpen = () => {
@@ -25,12 +26,14 @@ const CreateCategory = ({ form }) => {
     form.validateFields(async (err, values) => {
       if (!err) {
         try {
+          setLoading(true);
           const { name } = await createCategory(values);
           message.success(`Category ${name} success created.`);
         } catch (error) {
           message.error(`Сategory creation error`);
           console.log(error);
         } finally {
+          setLoading(false);
           onClose();
         }
       }
@@ -47,12 +50,13 @@ const CreateCategory = ({ form }) => {
       <Modal
         visible={visible}
         title="Create Category"
-        okText="create"
+        okText="Create"
         onCancel={onClose}
         onOk={handleSubmit}
+        confirmLoading={loading}
       >
         <Form layout="vertical">
-          <Form.Item label="Name">
+          <Form.Item>
             {getFieldDecorator("name", {
               rules: [
                 {

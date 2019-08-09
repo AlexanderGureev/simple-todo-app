@@ -26,6 +26,7 @@ const DeleteCategory = () => {
       onConfirm={confirm}
       okText="Yes"
       cancelText="No"
+      disabled={!activeCategory}
     >
       <DeleteCategoryBtn component={RemoveIcon} color="hsl(0,0%,80%)" />
     </Popconfirm>

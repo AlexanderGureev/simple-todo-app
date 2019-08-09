@@ -7,11 +7,12 @@ import {
   InfiniteLoader
 } from "react-virtualized";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { TodoList, EmptyContainer, Empty } from "./styles";
+import { TodoList } from "./styles";
 import { ReactComponent as SettingIcon } from "./img/menu-icon.svg";
 import { ReactComponent as CheckIcon } from "./img/checked.svg";
 import CreateTodo from "./CreateTodoModal";
 import Preloader from "../Common/Preloader";
+import EmptyCategory from "./EmptyCategory";
 
 const cache = new CellMeasurerCache({
   defaultHeight: 60,
@@ -301,9 +302,7 @@ const TodoListComponent = () => {
     return (
       <>
         <TodoList>
-          <EmptyContainer>
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          </EmptyContainer>
+          <EmptyCategory />
         </TodoList>
         <CreateTodo handleCreateNewTodo={handleCreateNewTodo} />
       </>
