@@ -2,6 +2,8 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import RSelect from "react-select";
+import { List } from "react-virtualized";
+
 import {
   Menu as AntdMenu,
   Dropdown as AntdDropdown,
@@ -58,6 +60,30 @@ export const ContentWrapper = styled.div`
     height: 100%;
   }
 `;
+
+export const DropdownContainer = styled.div``;
+export const TaskMenu = styled(AntdMenu)``;
+
+TaskMenu.Item = styled(AntdMenu.Item)`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  && {
+    padding: 0;
+    @media (max-width: 580px) {
+      li {
+        font-size: 12px;
+      }
+    }
+  }
+`;
+TaskMenu.Item.Text = styled.div`
+  i {
+    margin-right: 5px;
+  }
+  padding: 5px 10px;
+`;
+
 export const Menu = styled.div`
   font-size: 20px;
   font-weight: 500;
@@ -520,66 +546,66 @@ export const TodoList = styled.div`
     max-height: 450px;
   }
 `;
+
+export const DragHandleContainer = styled.div`
+  margin-right: 10px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+
+  svg {
+    width: 25px;
+    height: 25px;
+  }
+  @media (max-width: 680px) {
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  @media (max-width: 680px) {
+    width: 15px;
+    height: 15px;
+  }
+`;
+
+export const TodoItemContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 30px;
+`;
 const TodoItem = styled.div`
-  padding: 17px 30px;
   display: flex;
   align-items: center;
 `;
 const StyledTodoIcon = styled.div`
-  min-width: 50px;
-  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: ${props => (props.active ? "none" : "1px solid #b4b4b4")};
   position: relative;
   cursor: pointer;
-  margin-right: 15px;
+  margin-right: 10px;
   background-color: ${props => (props.active ? "#72B9FF" : "none")};
   position: relative;
   transition: background-color 0.3s ease;
 
-  @media (max-width: 991px) {
-    min-width: 40px;
-    height: 40px;
-  }
-
   @media (max-width: 680px) {
-    min-width: 30px;
-    height: 30px;
-  }
-
-  @media (max-width: 380px) {
     min-width: 20px;
     height: 20px;
   }
+
   svg {
+    width: 15px;
     path {
       fill: ${props => (props.active ? "#fff" : "rgb(159, 159, 159)")};
     }
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    left: 12px;
-    top: 12px;
-
-    @media (max-width: 991px) {
-      width: 20px;
-      height: 20px;
-      left: 9px;
-      top: 10px;
-    }
 
     @media (max-width: 680px) {
-      width: 15px;
-      height: 15px;
-      left: 7px;
-      top: 8px;
-    }
-
-    @media (max-width: 380px) {
       width: 10px;
-      height: 10px;
-      left: 4px;
-      top: 5px;
     }
   }
 `;
@@ -609,12 +635,13 @@ const TodoText = styled.p`
     font-size: 12px;
   }
 `;
-const TodoDate = styled(TodoText)`
-  font-size: 14px;
+const TodoDate = styled.div`
+  font-size: 12px;
   font-weight: 300;
-  @media (max-width: 1200px) {
-    font-size: 12px;
-  }
+  margin: 0;
+  padding-bottom: 5px;
+  word-break: break-all;
+
   @media (max-width: 991px) {
     font-size: 10px;
   }
@@ -769,3 +796,9 @@ export const CategoryPrefixContainer = ({ children, className, ...rest }) => (
 );
 
 export const ColorPickerContainer = styled.div``;
+
+export const StyledList = styled(List)`
+  > div {
+    position: initial !important;
+  }
+`;

@@ -126,6 +126,28 @@ const sessionEffects = {
       return deletedCategory;
     }
   ),
+  deleteTodo: thunk(
+    async (
+      actions,
+      { categoryId, todoId },
+      { injections: { Api }, getState }
+    ) => {
+      const { statistics } = getState();
+      const deletedTodo = await Api.deleteTodoByCategory(categoryId, todoId);
+
+      const updatedStatistics = {
+        ...statistics,
+        count: statistics.count - 1,
+        [deletedTodo.status]: statistics[deletedTodo.status] - 1,
+        primary: deletedTodo.primary
+          ? statistics[deletedTodo.primary] - 1
+          : statistics[deletedTodo.primary]
+      };
+
+      actions.updateStatisticsAction(updatedStatistics);
+      return deletedTodo;
+    }
+  ),
   logoutUser: thunk(async (actions, payload, { injections: { Api } }) => {
     await Api.logoutUser();
     actions.changeAuthStatusAction(false);
@@ -140,7 +162,7 @@ const sessionEffects = {
     }
   }),
   getStatistics: thunk(async (actions, payload, { injections: { Api } }) => {
-    const todosByCategory = await Api.getTodos();
+    const todosByCategory = await Api.getTodos({ limit: 100 }); // max limit
     const stat = todosByCategory.reduce(
       (acc, { todos }) => ({
         ...acc,

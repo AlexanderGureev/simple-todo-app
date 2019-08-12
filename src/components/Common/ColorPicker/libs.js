@@ -20,3 +20,17 @@ export const debounceFn = (fn, ms = 1000) => {
     timer = setTimeout(fn, ms, ...args);
   };
 };
+
+export const throttleFn = (fn, ms = 500) => {
+  let flag = true;
+
+  return (...args) => {
+    if (flag) {
+      fn(...args);
+      flag = false;
+      setTimeout(() => {
+        flag = true;
+      }, ms);
+    }
+  };
+};

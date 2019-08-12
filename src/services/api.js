@@ -21,6 +21,7 @@ const API_LOGOUT = `${API_URL}/logout`;
 const API_GET_USER_PROFILE = `${API_URL}/users`;
 const API_CREATE_TODO = `${API_URL}/todos`;
 const API_UPDATE_TODO = `${API_URL}/todos`;
+const API_DELETE_TODO_BY_CATEGORY = `${API_URL}/todos`;
 
 const API_GET_TODOS_BY_CATEGORY = `${API_URL}/todos`;
 const API_CREATE_CATEGORY = `${API_URL}/categories`;
@@ -236,6 +237,19 @@ const updateCategoryById = async (categoryId, body) => {
   }
 };
 
+const deleteTodoByCategory = async (categoryId, todoId) => {
+  try {
+    const { data, status } = await axios({
+      method: "DELETE",
+      url: `${API_DELETE_TODO_BY_CATEGORY}/${categoryId}/${todoId}`
+    });
+    if (![200, 204].includes(status)) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
 export default {
   authUser,
   registerUser,
@@ -251,5 +265,6 @@ export default {
   updateUserProfile,
   removeFile,
   updateCategoryById,
+  deleteTodoByCategory,
   API_PUBLIC_URL
 };

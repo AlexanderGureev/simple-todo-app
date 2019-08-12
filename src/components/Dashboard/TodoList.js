@@ -1,21 +1,22 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer, useRef } from "react";
 import {
-  CellMeasurer,
   CellMeasurerCache,
   AutoSizer,
-  List,
   InfiniteLoader
 } from "react-virtualized";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { message } from "antd";
+import arrayMove from "array-move";
+import { useWindowSize, useThrottleFn } from "react-use";
 import { TodoList } from "./styles";
 import CreateTodo from "./CreateTodoModal";
 import Preloader from "../Common/Preloader";
 import EmptyCategory from "./EmptyCategory";
-import TodoListItem from "./TodoListItem";
+import SortableVirtualList from "./SortableVirtualList";
 
 const cache = new CellMeasurerCache({
-  defaultHeight: 60,
+  minHeight: 80,
+  defaultHeight: 80,
   fixedWidth: true
 });
 
@@ -85,6 +86,25 @@ function todoReducer(state, { type, payload }) {
         [activeCategory]: todosByCategory
       };
     }
+    case "REMOVE_DELETED_TODO": {
+      const { activeCategory, todo } = payload;
+
+      const updatedTodosByCategory = Object.entries(
+        state[activeCategory]
+      ).reduce(
+        (acc, [filter, todos]) => ({
+          ...acc,
+          [filter]: todos.filter(({ id }) => id !== todo.id)
+        }),
+        {}
+      );
+
+      return {
+        ...state,
+        [activeCategory]: updatedTodosByCategory
+      };
+    }
+
     default:
       return state;
   }
@@ -120,12 +140,37 @@ function countReducer(state, { type, payload }) {
         }
       };
     }
+    case "DECREMENT_COUNT_TODOS": {
+      const { activeCategory, todo } = payload;
+      const updatedCountTodosByCategory = Object.entries(
+        state[activeCategory]
+      ).reduce((acc, [filter, count]) => {
+        if (filter === "completed") {
+          return {
+            ...acc,
+            [filter]: todo.status === "completed" ? count - 1 : count
+          };
+        }
+        if (filter === "primary") {
+          return {
+            ...acc,
+            [filter]: todo.primary ? count - 1 : count
+          };
+        }
+        return { ...acc, [filter]: count - 1 };
+      }, {});
+      return {
+        ...state,
+        [activeCategory]: updatedCountTodosByCategory
+      };
+    }
     default:
       return state;
   }
 }
 
 const TodoListComponent = () => {
+  const { width: windowWidth } = useWindowSize();
   const filterOptions = useStoreState(state => state.session.filterOptions);
   const activeCategory = useStoreState(state => state.session.activeCategory);
   const getTodosByCategory = useStoreActions(
@@ -137,6 +182,18 @@ const TodoListComponent = () => {
   const [loading, setLoading] = useState(false);
   const [todos, todosDispatch] = useReducer(todoReducer, {});
   const [counts, countsDispatch] = useReducer(countReducer, {});
+
+  const listRef = useRef();
+
+  useThrottleFn(() => forceUpdateList(), 500, [
+    windowWidth,
+    activeCategory,
+    filterOptions
+  ]);
+
+  useEffect(() => {
+    forceUpdateList();
+  }, [counts, todos]);
 
   useEffect(() => {
     async function fetchTodosByCategory() {
@@ -151,14 +208,13 @@ const TodoListComponent = () => {
           type: "SET_COUNT_TODOS",
           payload: { ...data, filterKey }
         });
-        setLoading(false);
       } catch (error) {
-        setLoading(false);
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
 
-    clearListCache();
     const filterKey = mapFilterKey(filterOptions);
     if (
       (todos[activeCategory] && todos[activeCategory][filterKey]) ||
@@ -169,7 +225,17 @@ const TodoListComponent = () => {
     fetchTodosByCategory();
   }, [activeCategory, filterOptions]); //eslint-disable-line
 
-  const clearListCache = () => cache.clearAll();
+  const getRef = ref => {
+    listRef.current = ref;
+  };
+
+  const forceUpdateList = () => {
+    cache.clearAll();
+    if (listRef.current) {
+      listRef.current.recomputeRowHeights();
+      listRef.current.forceUpdate();
+    }
+  };
   const mapFilterKey = filter => {
     const [filterKey = "all"] = Object.keys(filter);
     switch (filterKey) {
@@ -246,26 +312,15 @@ const TodoListComponent = () => {
       payload: { activeCategory, filterKey }
     });
   };
-  const rowRenderer = ({ key, index, parent, style }) => {
-    const todosState = mapTodos(activeCategory, filterOptions);
-    return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-      >
-        {({ measure }) => (
-          <TodoListItem
-            key={key}
-            style={style}
-            todo={todosState[index]}
-            onClick={changeStatusTodoHandle(todosState[index].id)}
-          />
-        )}
-      </CellMeasurer>
-    );
+  const handleDeleteTodo = deletedTodo => {
+    todosDispatch({
+      type: "REMOVE_DELETED_TODO",
+      payload: { todo: deletedTodo, activeCategory }
+    });
+    countsDispatch({
+      type: "DECREMENT_COUNT_TODOS",
+      payload: { todo: deletedTodo, activeCategory }
+    });
   };
   const isRowLoaded = ({ index }) => {
     const todosState = mapTodos(activeCategory, filterOptions);
@@ -293,6 +348,22 @@ const TodoListComponent = () => {
       console.log(error);
     }
   };
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    const todosState = mapTodos(activeCategory, filterOptions);
+    const filterKey = mapFilterKey(filterOptions);
+
+    if (oldIndex === newIndex) {
+      return;
+    }
+
+    const movedTodos = arrayMove(todosState, oldIndex, newIndex);
+    todosDispatch({
+      type: "SET_TODOS",
+      payload: { id: activeCategory, todos: movedTodos, filterKey }
+    });
+
+    forceUpdateList();
+  };
 
   if (!loading && !mapTodos(activeCategory, filterOptions).length)
     return (
@@ -317,19 +388,21 @@ const TodoListComponent = () => {
             minimumBatchSize={10}
             threshold={5}
           >
-            {({ onRowsRendered, registerChild }) => (
+            {({ onRowsRendered }) => (
               <AutoSizer>
                 {({ height, width }) => (
-                  <List
-                    deferredMeasurementCache={cache}
-                    rowHeight={cache.rowHeight}
-                    onRowsRendered={onRowsRendered}
-                    ref={registerChild}
+                  <SortableVirtualList
+                    cache={cache}
+                    getRef={getRef}
                     height={height}
-                    rowCount={mapTodos(activeCategory, filterOptions).length}
-                    rowRenderer={rowRenderer}
                     width={width}
-                    overscanRowCount={0}
+                    onRowsRendered={onRowsRendered}
+                    onSortEnd={onSortEnd}
+                    todos={mapTodos(activeCategory, filterOptions)}
+                    changeStatusTodoHandle={changeStatusTodoHandle}
+                    handleDeleteTodo={handleDeleteTodo}
+                    todosCount={mapTodos(activeCategory, filterOptions).length}
+                    useDragHandle
                   />
                 )}
               </AutoSizer>
