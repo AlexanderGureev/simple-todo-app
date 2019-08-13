@@ -21,6 +21,7 @@ const API_LOGOUT = `${API_URL}/logout`;
 const API_GET_USER_PROFILE = `${API_URL}/users`;
 const API_CREATE_TODO = `${API_URL}/todos`;
 const API_UPDATE_TODO = `${API_URL}/todos`;
+const API_UPDATE_TODOS_POSITION_BY_CATEGORY = `${API_URL}/todos`;
 const API_DELETE_TODO_BY_CATEGORY = `${API_URL}/todos`;
 
 const API_GET_TODOS_BY_CATEGORY = `${API_URL}/todos`;
@@ -237,6 +238,20 @@ const updateCategoryById = async (categoryId, body) => {
   }
 };
 
+const updatePositionTodosByCategoryId = async (categoryId, todosIds) => {
+  try {
+    const { data, status } = await axios({
+      method: "PUT",
+      url: `${API_UPDATE_TODOS_POSITION_BY_CATEGORY}/${categoryId}`,
+      data: todosIds
+    });
+    if (![200, 204].includes(status)) throw new Error("The request failed");
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
 const deleteTodoByCategory = async (categoryId, todoId) => {
   try {
     const { data, status } = await axios({
@@ -266,5 +281,6 @@ export default {
   removeFile,
   updateCategoryById,
   deleteTodoByCategory,
+  updatePositionTodosByCategoryId,
   API_PUBLIC_URL
 };

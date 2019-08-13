@@ -1,26 +1,10 @@
-import React, { useState } from "react";
-import { useStoreActions } from "easy-peasy";
-import { v4 } from "uuid";
-import { TopLine, Filters } from "./styles";
+import React from "react";
+import { TopLine } from "./styles";
+import Filters from "./Filters";
 import Select from "./Select";
 import CategoryPrefix from "./CategoryPrefix";
 
-const filters = [
-  { id: v4(), text: "All", filter: {} },
-  { id: v4(), text: "Active", filter: { status: "active" } },
-  { id: v4(), text: "Completed", filter: { status: "completed" } },
-  { id: v4(), text: "Primary", filter: { primary: true } }
-];
-
 const TopLineComponent = () => {
-  const setFilter = useStoreActions(state => state.session.setFilter);
-  const [active, setActiveFilter] = useState(0);
-
-  const handleChangeFilter = (id, filterOptions) => {
-    setActiveFilter(id);
-    setFilter(filterOptions);
-  };
-
   return (
     <TopLine>
       <TopLine.Container>
@@ -28,17 +12,7 @@ const TopLineComponent = () => {
         <Select />
       </TopLine.Container>
       <TopLine.Container>
-        <Filters>
-          {filters.map(({ id, text, filter }, i) => (
-            <Filters.Item
-              key={id}
-              active={active === i}
-              onClick={() => handleChangeFilter(i, filter)}
-            >
-              {text}
-            </Filters.Item>
-          ))}
-        </Filters>
+        <Filters />
       </TopLine.Container>
     </TopLine>
   );

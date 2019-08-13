@@ -3,6 +3,21 @@ import { action, thunk } from "easy-peasy";
 const DEFAULT_AVATAR_PATH = `/upload/ava_default.png`;
 
 const sessionEffects = {
+  recoverySession: thunk(
+    async (actions, payload, { injections: { Api, cache } }) => {
+      try {
+        const user = await actions.getUserProfile();
+
+        const [firstCategory = {}] = user.categories;
+        actions.setCategory(firstCategory.id || "");
+
+        actions.updateProfileAction(user);
+        actions.changeAuthStatusAction(true);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  ),
   registerUser: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.registerUser(payload);
     actions.updateProfileAction(user);
@@ -17,6 +32,15 @@ const sessionEffects = {
     const data = await Api.getTodos(payload);
     return data;
   }),
+  updateSortingTodos: thunk(
+    async (actions, { categoryId, todosIds }, { injections: { Api } }) => {
+      const data = await Api.updatePositionTodosByCategoryId(
+        categoryId,
+        todosIds
+      );
+      return data;
+    }
+  ),
   getTodosByCategory: thunk(
     async (actions, payload, { injections: { Api } }) => {
       const data = await Api.getTodosByCategory(payload);
@@ -60,11 +84,12 @@ const sessionEffects = {
   deleteAvatar: thunk(
     async (actions, payload, { injections: { Api }, getState }) => {
       const { profile } = getState();
-      const [, updatedProfile] = await Promise.all([
+      const [, { avatarPath }] = await Promise.all([
         actions.removeFile(payload),
         Api.updateUserProfile(profile.id, { avatarPath: DEFAULT_AVATAR_PATH })
       ]);
-      actions.updateProfileAction(updatedProfile);
+
+      actions.updateProfileAction({ avatarPath });
     }
   ),
   changeStatusTodo: thunk(
@@ -93,10 +118,10 @@ const sessionEffects = {
     async (actions, payload, { injections: { Api }, getState }) => {
       const { profile } = getState();
       const newCategory = await Api.createCategory(payload);
+      actions.setCategory(newCategory.id);
       actions.updateProfileAction({
         categories: [...profile.categories, newCategory]
       });
-      actions.setActiveCategory(newCategory.id);
       return newCategory;
     }
   ),
@@ -115,12 +140,16 @@ const sessionEffects = {
     }
   ),
   deleteCategory: thunk(
-    async (actions, payload, { injections: { Api }, getState }) => {
+    async (actions, payload, { injections: { Api, cache }, getState }) => {
       const { profile } = getState();
       const deletedCategory = await Api.deleteCategory(payload);
       const filteredCategories = profile.categories.filter(
         ({ id }) => id !== deletedCategory.id
       );
+
+      const [firstCategory = {}] = filteredCategories;
+      actions.setCategory(firstCategory.id || "");
+
       actions.updateProfileAction({ categories: filteredCategories });
       await actions.getStatistics();
       return deletedCategory;
@@ -153,13 +182,8 @@ const sessionEffects = {
     actions.changeAuthStatusAction(false);
   }),
   getUserProfile: thunk(async (actions, payload, { injections: { Api } }) => {
-    try {
-      const user = await Api.getUserProfile();
-      actions.updateProfileAction(user);
-      actions.changeAuthStatusAction(true);
-    } catch (error) {
-      console.log(error);
-    }
+    const user = await Api.getUserProfile();
+    return user;
   }),
   getStatistics: thunk(async (actions, payload, { injections: { Api } }) => {
     const todosByCategory = await Api.getTodos({ limit: 100 }); // max limit
@@ -202,10 +226,7 @@ const model = {
     isAuth: false,
     updateProfileAction: action((state, payload) => ({
       ...state,
-      profile: { ...state.profile, ...payload },
-      activeCategory:
-        payload.categories &&
-        (payload.categories.length ? payload.categories[0].id : "")
+      profile: { ...state.profile, ...payload }
     })),
     updateStatisticsAction: action((state, payload) => ({
       ...state,
@@ -223,7 +244,7 @@ const model = {
       ...state,
       filterOptions: payload
     })),
-    setActiveCategory: action((state, payload) => ({
+    setCategory: action((state, payload) => ({
       ...state,
       activeCategory: payload
     })),

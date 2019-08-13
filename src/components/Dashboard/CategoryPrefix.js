@@ -17,9 +17,6 @@ const CategoryPrefixComponent = () => {
   const prefixRef = useRef();
   useOnClickOutside(prefixRef, () => setVisible(false));
 
-  const { color = DEFAULT_PREFIX_COLOR } =
-    categories.length && categories.find(({ id }) => id === activeCategory);
-
   const handleChangeColor = async hex => {
     try {
       if (hex === color) return;
@@ -29,6 +26,9 @@ const CategoryPrefixComponent = () => {
     }
   };
   const openColorPicker = () => setVisible(true);
+
+  const foundCategory = categories.find(({ id }) => id === activeCategory);
+  const { color = DEFAULT_PREFIX_COLOR } = foundCategory || {};
 
   return (
     <ColorPickerContainer ref={prefixRef}>

@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { Form, Input, message, Modal } from "antd";
-import { useStoreActions } from "easy-peasy";
 import { CustomIcon as CreateCategoryBtn } from "./styles";
 import { ReactComponent as PlusIcon } from "./img/add.svg";
 
-const CreateCategory = ({ form }) => {
-  const createCategory = useStoreActions(
-    actions => actions.session.createCategory
-  );
+const CreateCategory = ({ form, handleCreateCategory }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const { getFieldDecorator } = form;
 
   const onOpen = () => {
@@ -27,11 +24,9 @@ const CreateCategory = ({ form }) => {
       if (!err) {
         try {
           setLoading(true);
-          const { name } = await createCategory(values);
-          message.success(`Category ${name} success created.`);
+          await handleCreateCategory(values);
         } catch (error) {
           message.error(`Сategory creation error`);
-          console.log(error);
         } finally {
           setLoading(false);
           onClose();

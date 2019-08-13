@@ -179,6 +179,9 @@ const TodoListComponent = () => {
   const changeStatusTodo = useStoreActions(
     actions => actions.session.changeStatusTodo
   );
+  const updateSortingTodos = useStoreActions(
+    actions => actions.session.updateSortingTodos
+  );
   const [loading, setLoading] = useState(false);
   const [todos, todosDispatch] = useReducer(todoReducer, {});
   const [counts, countsDispatch] = useReducer(countReducer, {});
@@ -203,6 +206,7 @@ const TodoListComponent = () => {
           id: activeCategory,
           params: filterOptions
         });
+
         todosDispatch({ type: "SET_TODOS", payload: { ...data, filterKey } });
         countsDispatch({
           type: "SET_COUNT_TODOS",
@@ -339,11 +343,18 @@ const TodoListComponent = () => {
           offset
         }
       });
-
       todosDispatch({
         type: "ADD_LOADED_TODOS",
         payload: { ...data, filterKey }
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSortingTodos = async movedTodos => {
+    try {
+      const todosIds = movedTodos.map(({ id }) => id);
+      await updateSortingTodos({ categoryId: activeCategory, todosIds });
     } catch (error) {
       console.log(error);
     }
@@ -363,6 +374,7 @@ const TodoListComponent = () => {
     });
 
     forceUpdateList();
+    handleSortingTodos(movedTodos);
   };
 
   if (!loading && !mapTodos(activeCategory, filterOptions).length)

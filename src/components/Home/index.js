@@ -10,13 +10,11 @@ import { Header, Content } from "./styles";
 
 const Home = () => {
   const isAuth = useStoreState(state => state.session.isAuth);
-  const getUserProfile = useStoreActions(
-    actions => actions.session.getUserProfile
-  );
+  const { recoverySession } = useStoreActions(actions => actions.session);
 
   useEffect(() => {
-    getUserProfile();
-  }, [getUserProfile]);
+    recoverySession();
+  }, [recoverySession]);
 
   return isAuth ? (
     <Redirect to="/dashboard" />

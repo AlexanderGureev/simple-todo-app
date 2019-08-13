@@ -17,6 +17,7 @@ const DashboardComponent = props => {
   const isSmall = useMedia("(max-width: 580px)");
 
   const handleLogout = () => logoutUser();
+
   return (
     <Dashboard src={dashboardBg}>
       <ContentWrapper>

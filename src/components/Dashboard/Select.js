@@ -1,18 +1,56 @@
 import React from "react";
 import { useStoreState, useStoreActions } from "easy-peasy";
+import { useLocalStorage } from "react-use";
+import { message } from "antd";
 import { Select, SelectContainer } from "./styles";
 import CreateCategory from "./CreateCategoryModal";
 import DeleteCategory from "./DeleteCategory";
+import { ACTIVE_CATEGORY_CACHE_KEY } from "../../services/cache";
 
 const IndicatorSeparator = () => null;
-const defaultCategory = { value: "No categories", label: "No categories" };
+const defaultCategory = { value: "empty", label: "empty" };
 
 const SelectComponent = () => {
   const { categories } = useStoreState(state => state.session.profile);
   const activeCategory = useStoreState(state => state.session.activeCategory);
-  const setActiveCategory = useStoreActions(
-    actions => actions.session.setActiveCategory
+  const setCategory = useStoreActions(actions => actions.session.setCategory);
+  const { deleteCategory } = useStoreActions(actions => actions.session);
+  const { createCategory } = useStoreActions(actions => actions.session);
+  const [cachedCategory, setCachedCategory] = useLocalStorage(
+    ACTIVE_CATEGORY_CACHE_KEY,
+    ""
   );
+
+  if (cachedCategory && activeCategory !== cachedCategory) {
+    setCategory(cachedCategory);
+  }
+
+  const onChange = ({ id }) => {
+    setCachedCategory(id);
+    setCategory(id);
+  };
+
+  const handleDeleteCategory = async () => {
+    try {
+      setCachedCategory("");
+      const { name } = await deleteCategory(activeCategory);
+      message.success(`Category ${name} success deleted.`);
+    } catch (error) {
+      message.error(`Category delete failed`);
+      throw error;
+    }
+  };
+
+  const handleCreateCategory = async values => {
+    try {
+      const { name, id } = await createCategory(values);
+      setCachedCategory(id);
+      message.success(`Category ${name} success created.`);
+    } catch (error) {
+      message.error(`Сategory creation error`);
+      throw error;
+    }
+  };
 
   const getOptions = () =>
     categories.map(({ name, id, color }) => ({
@@ -22,22 +60,23 @@ const SelectComponent = () => {
       color
     }));
 
-  const onChange = ({ id }) => setActiveCategory(id);
-
   return (
     <SelectContainer>
       <Select
         options={getOptions()}
         value={
-          getOptions().find(({ id }) => id === activeCategory) ||
+          getOptions().find(({ id }) => activeCategory === id) ||
           defaultCategory
         }
         isSearchable={false}
         components={{ IndicatorSeparator }}
         onChange={onChange}
       />
-      <CreateCategory />
-      <DeleteCategory />
+      <CreateCategory handleCreateCategory={handleCreateCategory} />
+      <DeleteCategory
+        handleDeleteCategory={handleDeleteCategory}
+        activeCategory={activeCategory}
+      />
     </SelectContainer>
   );
 };

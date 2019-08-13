@@ -1,21 +1,13 @@
-import React, { useState } from "react";
-import { Popconfirm, message } from "antd";
-import { useStoreActions, useStoreState } from "easy-peasy";
+import React from "react";
+import { Popconfirm } from "antd";
 import { CustomIcon as DeleteCategoryBtn } from "./styles";
 import { ReactComponent as RemoveIcon } from "./img/remove.svg";
 
-const DeleteCategory = () => {
-  const activeCategory = useStoreState(state => state.session.activeCategory);
-  const deleteCategory = useStoreActions(
-    actions => actions.session.deleteCategory
-  );
-
+const DeleteCategory = ({ activeCategory, handleDeleteCategory }) => {
   const confirm = async e => {
     try {
-      const { name } = await deleteCategory(activeCategory);
-      message.success(`Category ${name} success deleted.`);
+      await handleDeleteCategory(e);
     } catch (error) {
-      message.error(`Category delete failed`);
       console.log(error);
     }
   };

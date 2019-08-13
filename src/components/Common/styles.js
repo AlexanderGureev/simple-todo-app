@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Button as AntdButton } from "antd";
+import { ReactComponent as Logo } from "../Home/img/logo.svg";
 
 export const PreloaderContainer = styled.div`
   width: 100%;
@@ -47,4 +48,42 @@ export const Button = styled(AntdButton)`
   @media (max-width: 490px) {
     padding: 10px 50px;
   }
+`;
+
+const animateBg = keyframes`
+  from {
+    opacity: 1;
+  } 
+  to {
+    opacity: 0;
+    
+  }
+`;
+
+export const LoadingContainer = styled.div`
+  position: absolute;
+  z-index: 10000;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #6dccef, #d4ebff);
+  transition: 3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${animateBg} 0.5s ease;
+  animation-delay: ${props => `${props.delay}s`};
+  animation-fill-mode: forwards;
+`;
+
+export const LoadingIcon = styled(Logo)`
+  width: 100px;
+  position: relative;
+  left: 12px;
+`;
+
+export const ContentWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
