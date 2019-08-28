@@ -124,6 +124,7 @@ const authUser = async body => {
       url: API_LOGIN_URL,
       data: body
     });
+
     if (status !== 201) throw new Error("The request failed");
     return data;
   } catch (error) {

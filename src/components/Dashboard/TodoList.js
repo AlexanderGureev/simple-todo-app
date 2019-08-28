@@ -379,12 +379,12 @@ const TodoListComponent = () => {
 
   if (!loading && !mapTodos(activeCategory, filterOptions).length)
     return (
-      <>
+      <TodoListWrapper>
         <TodoList>
           <EmptyCategory />
         </TodoList>
         <CreateTodo handleCreateNewTodo={handleCreateNewTodo} />
-      </>
+      </TodoListWrapper>
     );
 
   return (
