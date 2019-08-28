@@ -8,7 +8,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { message } from "antd";
 import arrayMove from "array-move";
 import { useWindowSize, useThrottleFn } from "react-use";
-import { TodoList } from "./styles";
+import { TodoList, TodoListWrapper } from "./styles";
 import CreateTodo from "./CreateTodoModal";
 import Preloader from "../Common/Preloader";
 import EmptyCategory from "./EmptyCategory";
@@ -388,7 +388,7 @@ const TodoListComponent = () => {
     );
 
   return (
-    <>
+    <TodoListWrapper>
       <TodoList>
         {loading ? (
           <Preloader />
@@ -423,7 +423,7 @@ const TodoListComponent = () => {
         )}
       </TodoList>
       <CreateTodo handleCreateNewTodo={handleCreateNewTodo} />
-    </>
+    </TodoListWrapper>
   );
 };
 

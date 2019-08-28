@@ -45,8 +45,12 @@ const DashboardComponent = props => {
             </Row>
           </Col>
 
-          <Col xs={{ span: 24, order: 0 }} lg={{ span: 18, order: 1 }}>
-            <Row>
+          <Col
+            style={{ display: "flex", flexDirection: "column" }}
+            xs={{ span: 24, order: 0 }}
+            lg={{ span: 18, order: 1 }}
+          >
+            <Row style={{ flexGrow: 0 }}>
               <Col xs={24}>
                 {isSmall ? (
                   <DropdownMenu handleClick={handleLogout} {...props} />
@@ -56,8 +60,8 @@ const DashboardComponent = props => {
               </Col>
             </Row>
 
-            <Row style={{ height: "75%" }}>
-              <Col xs={24}>
+            <Row style={{ flexGrow: 1 }}>
+              <Col xs={24} style={{ display: "flex", flexDirection: "column" }}>
                 <TopLine />
                 <TodoList />
               </Col>

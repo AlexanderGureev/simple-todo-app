@@ -525,10 +525,16 @@ Filters.Item = FilterItem;
 
 TopLine.Container = TopLineContainer;
 
+export const TodoListWrapper = styled.div`
+  height: 100%;
+  button {
+    margin-bottom: 30px;
+  }
+`;
 export const TodoList = styled.div`
   width: 100%;
   height: 85%;
-  margin-bottom: 30px;
+
   div {
     outline: none;
     ::-webkit-scrollbar {
