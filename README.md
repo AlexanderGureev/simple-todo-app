@@ -1,24 +1,7 @@
 ## Desctiption
 
-Simple task management application for the backend nestjs-todo-app.
+Simple task management application for the backend nestjs-todo-app.  
 
-### `npm start`
+#### Desktop application interface
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+<img src="https://lh3.googleusercontent.com/ZJM39C2vy96jWKY5IYngpB7-pJxWJlPOGMvpHcagnnXl4CqSUjghPwFdf0i86gFUCK0fBbfkEzE2eu2Mrw1AkjSwlzFO7elI99i-IW6DxllWWqLTh4Yw_g2dwCON4bEBSXyg6kTkLDCjzP-e4m4kaSaUCZUexoFixZPle3t-HQXsa5NKBjlx2BRqNbn0b0GnJd5Iq5NeT0jZtFfSXwWyfBsUCuX9ReRXem9im47rqmv6rXhXsYCBxhZBjWbtjcdfmvTChPljwWk5yCpo3BTVIqFRJuqrDBzApuirO8ImtOwgeC3CXbppgsfbHpDQGnPaJu2ewzQJQXq3t3FdzTfW_gNpY0Ngl6RSa_rfhne8XVmJK-UqvexrvGrpxNFe3pAj-3k1N2spdX2QQQRyApsgvQAP7bZlNDMsRnAQf2sSztKnj1jTGGEsEbA4djP_LF_IcyHT9_E4hbU3hKtcBbOYjSh4X_86a23u-_o_HSCF3Dt1j8wR2xg07okI24UmI8iP8dJxzJI_IHjLsn8SR6iuyJ9Y4PRFdhbALIjVvETpxBWkYqbtCrgmOPVvzdYHupot-OMZElaPUhrMKXX9ld_TPnB2A3MhGvnQElxLk4CKQtW896D30yprURgE0HgKNdnBkRyqfKCtf46igiCJgM1ZgMlL5bZKHGo=w2693-h1639-no" alt="simpletodolist_interface" />
