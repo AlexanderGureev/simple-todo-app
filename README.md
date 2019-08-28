@@ -1,6 +1,7 @@
 ## Desctiption
 
-Simple task management application for the backend nestjs-todo-app.  
+Web service for task management. The goal of the project is to offer a quick, simple and multi-functional service for tasks.  
+[API](https://github.com/AlexanderGureev/task-manager-backend) for the service.
 
 #### Desktop application interface
 
