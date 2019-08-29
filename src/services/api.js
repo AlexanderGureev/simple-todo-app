@@ -32,7 +32,7 @@ const API_UPLOAD_FILE = `${API_URL}/files`;
 const API_REMOVE_FILE = `${API_URL}/files`;
 const API_UPDATE_USER_PROFILE = `${API_URL}/users`;
 
-const API_URL_SOCIAL_AUTH = `${API_URL}/oauth`;
+const API_URL_SOCIAL_AUTH = `${API_URL}/oauth/login`;
 
 const parseErrors = ({ response: { data } }) => {
   let errors = [];
