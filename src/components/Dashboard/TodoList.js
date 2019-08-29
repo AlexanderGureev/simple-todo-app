@@ -42,8 +42,8 @@ function todoReducer(state, { type, payload }) {
           }
         };
       }
-      const todosByFilter = Object.entries(state[activeCategory]);
-      const todosByCategory = todosByFilter.reduce((acc, [filter, todos]) => {
+      const todosByFilters = Object.entries(state[activeCategory]);
+      const todosByCategory = todosByFilters.reduce((acc, [filter, todos]) => {
         if (filter === "completed" || (filter === "primary" && !todo.primary))
           return acc;
         return { ...acc, [filter]: [...todos, todo] };
@@ -66,8 +66,11 @@ function todoReducer(state, { type, payload }) {
     }
     case "UPDATE_TODOS": {
       const { activeCategory, todo } = payload;
-      const todosByFilter = Object.entries(state[activeCategory]);
-      const todosByCategory = todosByFilter.reduce((acc, [filter, todos]) => {
+      const todosByFilters = Object.entries(state[activeCategory]);
+      const todosByCategory = todosByFilters.reduce((acc, [filter, todos]) => {
+        if (filter === "active" && todo.status === "completed") {
+          return { ...acc, [filter]: todos.filter(({ id }) => id !== todo.id) };
+        }
         if (filter === "completed") {
           return todo.status === "completed"
             ? { ...acc, [filter]: [...todos, todo] }

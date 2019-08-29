@@ -476,45 +476,69 @@ export const Select = styled(RSelect)`
 `;
 export const Filters = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  justify-content: flex-end;
+
+  div {
+    margin-left: 20px;
+
+    @media (max-width: 1200px) {
+      margin-left: 5px;
+    }
+
+    @media (max-width: 680px) {
+      margin-left: 5px;
+    }
+
+    @media (max-width: 360px) {
+      margin-left: 0px;
+    }
+  }
 `;
 const FilterItem = styled.div`
   text-transform: uppercase;
   font-size: 16px;
   cursor: pointer;
   color: ${props => (props.active ? "#fff" : "#575656")};
-  background: ${props => (props.active ? "rgba(9, 137, 230, 0.6)" : "none")};
-  border-radius: ${props => (props.active ? "25px" : "none")};
-  padding: ${props => (props.active ? "5px 12px" : "0")};
+  padding: 2px 10px;
   transition: 0.3s ease;
-  &:not(:last-child) {
-    margin-right: 30px;
+  position: relative;
+  z-index: 1;
 
-    @media (max-width: 1200px) {
-      margin-right: 10px;
-    }
-    @media (max-width: 460px) {
-      margin-right: 5px;
-    }
+  ::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(9, 137, 230, 0.6);
+    border-radius: 12px;
+    z-index: -1;
+    opacity: ${props => (props.active ? "1" : "0")};
+    transform: ${props => (props.active ? "scale(1)" : "scale(0)")};
+    transform-origin: center;
+    transition: 0.3s ease;
   }
 
   @media (max-width: 1400px) {
     font-size: 14px;
   }
-
   @media (max-width: 1200px) {
     font-size: 12px;
   }
-
-  @media (max-width: 360px) {
+  @media (max-width: 680px) {
     font-size: 10px;
   }
+  @media (max-width: 360px) {
+    padding: 2px 5px;
+  }
 `;
+
 const TopLineContainer = styled.div`
   display: flex;
   align-items: center;
-
+  flex-grow: 1;
   @media (max-width: 670px) {
     :not(:last-child) {
       margin-top: 15px;

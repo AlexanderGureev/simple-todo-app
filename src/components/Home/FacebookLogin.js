@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useStoreActions } from "easy-peasy";
 import { message } from "antd";
 import { Form } from "./styles";
@@ -20,38 +20,41 @@ const FacebookLogin = ({
 
   const provider = "facebook";
   const loadingIndicator = useRef(() => {});
+  const reqState = useRef(null);
   const socialService = new SocialService(requestCodeUrl);
 
   const setLoadingIndicator = () => {
-    loadingIndicator.current = message.open("Signing in");
+    loadingIndicator.current = message.loading("Signing in", 0);
   };
   const clearLoadingIndicator = () => loadingIndicator.current();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     loading ? setLoadingIndicator() : clearLoadingIndicator();
+    return () => clearLoadingIndicator();
   }, [loading]);
 
   const onButtonClick = e => {
-    e.preventDefault();
-    getParams()
-      .then(queryParams => {
-        socialService.getCode(queryParams, success, failure);
-      })
-      .catch(failure);
+    try {
+      reqState.current = socialService.getOperationState();
+      const queryParams = getParams();
+      socialService.getCode(queryParams, reqState.current, success, failure);
+    } catch (error) {
+      failure(new Error("Auth failed"));
+    }
   };
 
-  const getParams = async () => {
+  const getParams = () => {
     if (!clientId || !redirectUri || !requestCodeUrl) {
       throw new Error("Bad params");
     }
-    const token = await socialService.getRequestToken();
 
     const params = {
       response_type: rest.responseType || "code",
       scope: rest.scope || ["email", "public_profile"].join(", "),
       client_id: clientId,
       redirect_uri: redirectUri,
-      state: token
+      state: reqState.current,
+      display: "popup"
     };
 
     const paramsConstructor = new URLSearchParams();
@@ -64,16 +67,14 @@ const FacebookLogin = ({
     try {
       setLoading(true);
       await socialAuthorizeUserAction({ provider, code, state });
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       onFailure(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const failure = error => {
-    console.log(error.message || error);
-  };
+  const failure = error => onFailure(error);
 
   return (
     <Form.SocialBlock.Icon

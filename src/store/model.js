@@ -8,9 +8,7 @@ const sessionEffects = {
       try {
         const user = await actions.getUserProfile();
 
-        const [firstCategory = {}] = user.categories;
-        actions.setCategory(firstCategory.id || "");
-
+        actions.setActiveCategory(user);
         actions.updateProfileAction(user);
         actions.changeAuthStatusAction(true);
       } catch (error) {
@@ -18,20 +16,30 @@ const sessionEffects = {
       }
     }
   ),
+  setActiveCategory: thunk((actions, user) => {
+    const [firstCategory = {}] = user.categories;
+    actions.setCategory(firstCategory.id || "");
+  }),
   socialAuthorizeUserAction: thunk(
     async (actions, payload, { injections: { Api }, getState }) => {
       const user = await Api.socialAuthApi(payload);
+
+      actions.setActiveCategory(user);
       actions.updateProfileAction(user);
       actions.changeAuthStatusAction(true);
     }
   ),
   registerUser: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.registerUser(payload);
+
+    actions.setActiveCategory(user);
     actions.updateProfileAction(user);
     actions.changeAuthStatusAction(true);
   }),
   authUser: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.authUser(payload);
+
+    actions.setActiveCategory(user);
     actions.updateProfileAction(user);
     actions.changeAuthStatusAction(true);
   }),
@@ -184,10 +192,14 @@ const sessionEffects = {
       return deletedTodo;
     }
   ),
-  logoutUser: thunk(async (actions, payload, { injections: { Api } }) => {
-    await Api.logoutUser();
-    actions.changeAuthStatusAction(false);
-  }),
+  logoutUser: thunk(
+    async (actions, payload, { injections: { Api, cache } }) => {
+      await Api.logoutUser();
+      cache.clearCache();
+      actions.resetState();
+      actions.changeAuthStatusAction(false);
+    }
+  ),
   getUserProfile: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.getUserProfile();
     return user;
@@ -254,6 +266,9 @@ const model = {
     setCategory: action((state, payload) => ({
       ...state,
       activeCategory: payload
+    })),
+    resetState: action(() => ({
+      ...model.session
     })),
     ...sessionEffects
   }

@@ -20,6 +20,7 @@ const GoogleLogin = ({
 
   const provider = "google";
   const loadingIndicator = useRef(() => {});
+  const reqState = useRef(null);
   const socialService = new SocialService(requestCodeUrl);
 
   const setLoadingIndicator = () => {
@@ -32,21 +33,20 @@ const GoogleLogin = ({
     return () => clearLoadingIndicator();
   }, [loading]);
 
-  const onButtonClick = e => {
-    e.preventDefault();
-    getParams()
-      .then(queryParams => {
-        socialService.getCode(queryParams, success, failure);
-      })
-      .catch(failure);
+  const onButtonClick = async e => {
+    try {
+      reqState.current = socialService.getOperationState();
+      const queryParams = getParams();
+      socialService.getCode(queryParams, reqState.current, success, failure);
+    } catch (error) {
+      failure(new Error("Auth failed"));
+    }
   };
 
-  const getParams = async () => {
+  const getParams = () => {
     if (!clientId || !redirectUri || !requestCodeUrl) {
       throw new Error("Bad params");
     }
-    // const token = await socialService.getRequestToken();
-
     const params = {
       response_type: rest.responseType || "code",
       scope:
@@ -54,13 +54,12 @@ const GoogleLogin = ({
         ["profile", "https://www.googleapis.com/auth/userinfo.email"].join(" "),
       client_id: clientId,
       redirect_uri: redirectUri,
-      include_granted_scopes: true
-      // state: token
+      include_granted_scopes: true,
+      state: reqState.current
     };
 
     const paramsConstructor = new URLSearchParams();
     Object.keys(params).map(key => paramsConstructor.append(key, params[key]));
-
     return paramsConstructor.toString();
   };
 
@@ -68,18 +67,14 @@ const GoogleLogin = ({
     try {
       setLoading(true);
       await socialAuthorizeUserAction({ provider, code, state });
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       onFailure(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const failure = error => {
-    console.log(error.message || error);
-  };
+  const failure = error => onFailure(error);
 
   return (
     <Form.SocialBlock.Icon

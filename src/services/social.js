@@ -1,34 +1,25 @@
-import Api from "./api";
-
 export default class SocialService {
   constructor(requestCodeUrl) {
     this.requestCodeUrl = requestCodeUrl;
   }
 
-  getHeaders = () => {
-    const headers = Object.assign({}, this.props.customHeaders || {});
-    headers["Content-Type"] = "application/json";
-    return headers;
+  encode64 = buff => {
+    return window.btoa(
+      new Uint8Array(buff).reduce((s, b) => s + String.fromCharCode(b), "")
+    );
   };
 
-  // getRequestToken = async () => {
-  //   try {
-  //     const token = await api.getCSRFTokenApi();
-  //     if (!token) throw new Error("Token request error.");
+  getOperationState = () => {
+    const hash = crypto.getRandomValues(new Uint8Array(12));
+    return this.encode64(hash);
+  };
 
-  //     return token;
-  //   } catch (error) {
-  //     throw new Error(error.message);
-  //   }
-  // };
-
-  getCode = async (queryParams, success, failure) => {
+  getCode = async (queryParams, sourceState, success, failure) => {
     try {
       const popup = this.openPopup();
       popup.location = `${this.requestCodeUrl}?${queryParams}`;
-      this.polling(popup, success, failure);
+      this.polling(popup, sourceState, success, failure);
     } catch (error) {
-      console.log(error);
       failure("Authorization error, try again later.");
     }
   };
@@ -46,36 +37,28 @@ export default class SocialService {
     );
   };
 
-  polling = (popup, success, failure) => {
+  polling = (popup, sourceState, success, failure) => {
     const polling = setInterval(() => {
+      const closeDialog = () => {
+        clearInterval(polling);
+        popup.close();
+      };
+
       try {
         if (popup.location.href !== "about:blank") {
           if (!popup || popup.closed || popup.closed === undefined) {
             clearInterval(polling);
-            failure("Popup has been closed by user");
+            throw new Error("Popup has been closed by user");
           }
 
-          const closeDialog = () => {
-            clearInterval(polling);
-            popup.close();
-          };
-
           if (popup.location.href) {
-            // const query = new URLSearchParams(popup.location.hash.slice(1));
-            // const accessToken = query.get("access_token");
-            // const expiresIn = query.get("expires_in");
-
             const [, lastParams] = popup.location.href.split("?");
             const query = new URLSearchParams(lastParams);
             const code = query.get("code");
-            const state = query.get("state");
+            const [state] = query.get("state").split("#");
 
-            // if (!code || !state) {
-            //   throw new Error(
-            //     "OAuth redirect has occurred but no query or hash parameters were found."
-            //   );
-            // }
-            if (!code) {
+            if (!code || !state || state !== sourceState) {
+              closeDialog();
               throw new Error(
                 "OAuth redirect has occurred but no query or hash parameters were found."
               );
@@ -84,13 +67,12 @@ export default class SocialService {
             closeDialog();
             return success(code, state);
           }
-          return failure(
-            "OAuth redirect has occurred but no query or hash parameters were found."
-          );
         }
+        // eslint-disable-next-line no-empty
       } catch (error) {
         console.log(error.message);
+        failure(error.message);
       }
-    }, 0);
+    }, 100);
   };
 }

@@ -9,13 +9,13 @@ const SocialBlock = props => {
   const vkOnFailed = error => message.error(error);
   const vkOnSuccess = response => console.log(response);
 
-  const googleOnFailed = error => {
-    console.log(error);
-    message.error(error);
-  };
+  const googleOnFailed = error => message.error(error);
   const googleOnSuccess = response => console.log(response);
 
-  const facebookOnFailed = error => message.error(error);
+  const facebookOnFailed = error => {
+    console.log(error, "err");
+    message.error(error);
+  };
   const facebookOnSuccess = response => console.log(response);
 
   return (
