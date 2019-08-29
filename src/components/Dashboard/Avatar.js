@@ -86,6 +86,10 @@ const ProfileHeader = () => {
     }
   };
 
+  const src = avatarPath.match(/(https|http)/)
+    ? avatarPath
+    : `${API_PUBLIC_URL}${avatarPath}`;
+
   return (
     <>
       <Modal
@@ -110,7 +114,7 @@ const ProfileHeader = () => {
           )}
         </Dragger>
       </Modal>
-      <Avatar src={`${API_PUBLIC_URL}${avatarPath}`} onClick={openModal} />
+      <Avatar src={src} onClick={openModal} />
     </>
   );
 };

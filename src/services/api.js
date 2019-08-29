@@ -32,6 +32,8 @@ const API_UPLOAD_FILE = `${API_URL}/files`;
 const API_REMOVE_FILE = `${API_URL}/files`;
 const API_UPDATE_USER_PROFILE = `${API_URL}/users`;
 
+const API_URL_SOCIAL_AUTH = `${API_URL}/oauth`;
+
 const parseErrors = ({ response: { data } }) => {
   let errors = [];
   if (Array.isArray(data)) {
@@ -266,6 +268,24 @@ const deleteTodoByCategory = async (categoryId, todoId) => {
   }
 };
 
+const socialAuthApi = async ({ provider, code }) => {
+  try {
+    const { data, status } = await axios({
+      method: "POST",
+      url: API_URL_SOCIAL_AUTH,
+      data: { provider, code }
+    });
+
+    if (status !== 201) {
+      throw new Error("The request failed");
+    }
+
+    return data;
+  } catch (error) {
+    throw new Error(parseErrors(error));
+  }
+};
+
 export default {
   authUser,
   registerUser,
@@ -283,5 +303,6 @@ export default {
   updateCategoryById,
   deleteTodoByCategory,
   updatePositionTodosByCategoryId,
+  socialAuthApi,
   API_PUBLIC_URL
 };

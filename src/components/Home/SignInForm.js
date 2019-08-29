@@ -4,9 +4,8 @@ import { useStoreActions } from "easy-peasy";
 import { Form, Input } from "./styles";
 import { Button } from "../Common/styles";
 import { validateRules, hasErrors } from "./validateRules";
-import googleIcon from "./img/google-soc.svg";
-import fbIcon from "./img/fb-soc.svg";
-import vkIcon from "./img/vk-soc.svg";
+
+import SocialBlock from "./SocialBlock";
 
 const FormComponent = ({ form }) => {
   const { authUser } = useStoreActions(actions => actions.session);
@@ -36,11 +35,8 @@ const FormComponent = ({ form }) => {
           Welcome back, please login to your account.
         </Form.Header.Caption>
       </Form.Header>
-      <Form.SocialBlock>
-        <Form.SocialBlock.Icon src={googleIcon} />
-        <Form.SocialBlock.Icon src={fbIcon} />
-        <Form.SocialBlock.Icon src={vkIcon} />
-      </Form.SocialBlock>
+
+      <SocialBlock />
 
       <Form.InputGroup>
         <Form.Item>

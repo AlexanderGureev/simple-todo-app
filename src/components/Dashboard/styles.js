@@ -208,8 +208,8 @@ const Name = styled.p`
 `;
 const Email = styled(Name)`
   font-weight: 400;
-  font-size: 16px;
-
+  font-size: 14px;
+  word-break: break-all;
   @media (max-width: 991px) {
     font-size: 14px;
   }

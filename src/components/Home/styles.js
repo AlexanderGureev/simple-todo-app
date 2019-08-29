@@ -209,7 +209,14 @@ SocialBlock.Icon = styled.img.attrs(props => ({
   }
 `;
 
+const SocialIconBox = styled.div`
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+`;
+SocialBlock.IconBox = SocialIconBox;
 Form.SocialBlock = SocialBlock;
+
 const InputGroup = styled.div`
   position: relative;
 `;
@@ -287,5 +294,6 @@ const FormLink = styled(Link)`
     color: #0340a0;
   }
 `;
+
 Form.LinkGroup = LinkGroup;
 Form.Link = FormLink;

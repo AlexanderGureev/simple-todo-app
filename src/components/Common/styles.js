@@ -61,10 +61,10 @@ const animateBg = keyframes`
 `;
 
 export const LoadingContainer = styled.div`
-  position: absolute;
+  position: fixed;
   z-index: 10000;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: linear-gradient(135deg, #6dccef, #d4ebff);
   transition: 3s ease;
   display: flex;

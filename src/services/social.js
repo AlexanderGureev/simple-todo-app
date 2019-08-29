@@ -1,4 +1,4 @@
-import api from "./api";
+import Api from "./api";
 
 export default class SocialService {
   constructor(requestCodeUrl) {
@@ -11,16 +11,16 @@ export default class SocialService {
     return headers;
   };
 
-  getRequestToken = async () => {
-    try {
-      const token = await api.getCSRFTokenApi();
-      if (!token) throw new Error("Token request error.");
+  // getRequestToken = async () => {
+  //   try {
+  //     const token = await api.getCSRFTokenApi();
+  //     if (!token) throw new Error("Token request error.");
 
-      return token;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  };
+  //     return token;
+  //   } catch (error) {
+  //     throw new Error(error.message);
+  //   }
+  // };
 
   getCode = async (queryParams, success, failure) => {
     try {
@@ -64,12 +64,18 @@ export default class SocialService {
             // const query = new URLSearchParams(popup.location.hash.slice(1));
             // const accessToken = query.get("access_token");
             // const expiresIn = query.get("expires_in");
+
             const [, lastParams] = popup.location.href.split("?");
             const query = new URLSearchParams(lastParams);
             const code = query.get("code");
             const state = query.get("state");
 
-            if (!code || !state) {
+            // if (!code || !state) {
+            //   throw new Error(
+            //     "OAuth redirect has occurred but no query or hash parameters were found."
+            //   );
+            // }
+            if (!code) {
               throw new Error(
                 "OAuth redirect has occurred but no query or hash parameters were found."
               );
@@ -85,6 +91,6 @@ export default class SocialService {
       } catch (error) {
         console.log(error.message);
       }
-    }, 500);
+    }, 0);
   };
 }

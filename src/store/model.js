@@ -18,6 +18,13 @@ const sessionEffects = {
       }
     }
   ),
+  socialAuthorizeUserAction: thunk(
+    async (actions, payload, { injections: { Api }, getState }) => {
+      const user = await Api.socialAuthApi(payload);
+      actions.updateProfileAction(user);
+      actions.changeAuthStatusAction(true);
+    }
+  ),
   registerUser: thunk(async (actions, payload, { injections: { Api } }) => {
     const user = await Api.registerUser(payload);
     actions.updateProfileAction(user);
