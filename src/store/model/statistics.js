@@ -1,4 +1,4 @@
-import { action, thunk } from "easy-peasy";
+import { thunk, action, thunkOn } from "easy-peasy";
 
 const thunks = {
   getStatistics: thunk(async (actions, payload, { injections: { Api } }) => {
@@ -19,21 +19,67 @@ const thunks = {
       }
     );
     actions.updateStatisticsAction(stat);
-  })
+  }),
+  onUpdateStatistics: thunkOn(
+    (actions, storeActions) => [
+      storeActions.category.deleteCategory,
+      storeActions.todo.createTodo,
+      storeActions.todo.deleteTodo,
+      storeActions.todo.changeStatusTodo
+    ],
+    async (actions, { type, error, result }, { getState }) => {
+      if (error) return;
+      const state = getState();
+
+      // eslint-disable-next-line default-case
+      switch (type) {
+        case "@thunk.todo.changeStatusTodo": {
+          const { status } = result;
+          const updatedState = {
+            completed:
+              status === "completed" ? state.completed + 1 : state.completed - 1
+          };
+          actions.updateStatisticsAction(updatedState);
+          break;
+        }
+        case "@thunk.todo.deleteTodo": {
+          const { status, primary } = result;
+          const updatedState = {
+            count: state.count - 1,
+            [status]: state[status] - 1,
+            primary: primary ? state.primary - 1 : state.primary
+          };
+          actions.updateStatisticsAction(updatedState);
+          break;
+        }
+        case "@thunk.todo.createTodo": {
+          const { primary } = result;
+          const updatedState = {
+            count: state.count + 1,
+            primary: primary ? state.primary + 1 : state.primary
+          };
+          actions.updateStatisticsAction(updatedState);
+          break;
+        }
+        case "@thunk.category.deleteCategory": {
+          await actions.getStatistics();
+          break;
+        }
+      }
+    }
+  )
 };
 
 const actions = {
   updateStatisticsAction: action((state, payload) => ({
     ...state,
-    statistics: { ...state.statistics, ...payload }
+    ...payload
   }))
 };
 export const statisticsModel = {
-  statistics: {
-    count: 0,
-    completed: 0,
-    primary: 0
-  },
+  count: 0,
+  completed: 0,
+  primary: 0,
   ...thunks,
   ...actions
 };

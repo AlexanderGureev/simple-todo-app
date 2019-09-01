@@ -45,10 +45,8 @@ const TaskMenuComponent = ({ onClick }) => {
 };
 
 const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
-  const { activeCategory } = useStoreState(state => state.session);
-  const { deleteTodo: deleteTodoAction } = useStoreActions(
-    actions => actions.session
-  );
+  const activeCategory = useStoreState(state => state.category.activeCategory);
+  const deleteTodo = useStoreActions(actions => actions.todo.deleteTodo);
   const [visible, setVisible] = useState(false);
   const menuRef = useRef();
 
@@ -57,7 +55,7 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
 
   const deleteTodoById = async () => {
     try {
-      const deletedTodo = await deleteTodoAction({
+      const deletedTodo = await deleteTodo({
         categoryId: activeCategory,
         todoId: todo.id
       });

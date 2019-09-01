@@ -67,7 +67,6 @@ function todoReducer(state, { type, payload }) {
     case "UPDATE_TODOS": {
       const { activeCategory, todo } = payload;
       const todosByFilters = Object.entries(state[activeCategory]);
-      console.log(todosByFilters);
       const todosByCategory = todosByFilters.reduce((acc, [filter, todos]) => {
         if (filter === "active" && todo.status === "completed") {
           return { ...acc, [filter]: todos.filter(({ id }) => id !== todo.id) };
@@ -85,7 +84,7 @@ function todoReducer(state, { type, payload }) {
         todos[index] = todo;
         return { ...acc, [filter]: [...todos] };
       }, {});
-      console.log(todosByCategory);
+
       return {
         ...state,
         [activeCategory]: todosByCategory
@@ -176,18 +175,19 @@ function countReducer(state, { type, payload }) {
 
 const TodoListComponent = () => {
   const { width: windowWidth } = useWindowSize();
-  const activeFilter = useStoreState(state => state.session.activeFilter);
-  const filters = useStoreState(state => state.session.filters);
-  const activeCategory = useStoreState(state => state.session.activeCategory);
+  const activeFilter = useStoreState(state => state.filter.activeFilter);
+  const filters = useStoreState(state => state.filter.filters);
+  const activeCategory = useStoreState(state => state.category.activeCategory);
   const getTodosByCategory = useStoreActions(
-    actions => actions.session.getTodosByCategory
+    actions => actions.todo.getTodosByCategory
   );
   const changeStatusTodo = useStoreActions(
-    actions => actions.session.changeStatusTodo
+    actions => actions.todo.changeStatusTodo
   );
   const updateSortingTodos = useStoreActions(
-    actions => actions.session.updateSortingTodos
+    actions => actions.todo.updateSortingTodos
   );
+
   const [loading, setLoading] = useState(false);
   const [todos, todosDispatch] = useReducer(todoReducer, {});
   const [counts, countsDispatch] = useReducer(countReducer, {});

@@ -24,6 +24,7 @@
     "import/prefer-default-export": 0,
     "import/imports-first": ["error", "absolute-first"],
     "import/newline-after-import": "error",
-    "react-hooks/rules-of-hooks": "error"
+    "react-hooks/rules-of-hooks": "error",
+    "default-case": "warn"
   }
 }

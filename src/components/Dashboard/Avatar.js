@@ -8,7 +8,6 @@ import {
   Avatar,
   ModalBtn,
   ModalFooterContainer,
-  ModalBtnGroup,
   Modal
 } from "./styles";
 import { PreloaderContainer } from "../Common/styles";
@@ -37,10 +36,9 @@ const footerTemplate = ({ handleDelete }) => (
 );
 
 const ProfileHeader = () => {
-  const { avatarPath } = useStoreState(state => state.session.profile);
-  const { updateAvatar, deleteAvatar } = useStoreActions(
-    actions => actions.session
-  );
+  const avatarPath = useStoreState(state => state.profile.avatarPath);
+  const updateAvatar = useStoreActions(actions => actions.profile.updateAvatar);
+  const deleteAvatar = useStoreActions(actions => actions.profile.deleteAvatar);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 

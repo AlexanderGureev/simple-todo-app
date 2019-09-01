@@ -4,21 +4,34 @@ const DEFAULT_AVATAR_PATH = `/upload/ava_default.png`;
 
 const thunks = {
   updateAvatar: thunk(
-    async (actions, payload, { injections: { Api }, getState }) => {
+    async (
+      actions,
+      payload,
+      { injections: { Api }, getState, getStoreActions }
+    ) => {
       const { profile } = getState();
-      const { path } = await actions.uploadFile(payload);
+      const { uploadFile } = getStoreActions().file;
+
+      const { path } = await uploadFile(payload);
       const { avatarPath } = await Api.updateUserProfile(profile.id, {
         avatarPath: path
       });
+
       actions.updateProfileAction({ avatarPath });
       return avatarPath;
     }
   ),
   deleteAvatar: thunk(
-    async (actions, payload, { injections: { Api }, getState }) => {
+    async (
+      actions,
+      payload,
+      { injections: { Api }, getState, getStoreActions }
+    ) => {
       const { profile } = getState();
+      const { removeFile } = getStoreActions().file;
+
       const [, { avatarPath }] = await Promise.all([
-        actions.removeFile(payload),
+        removeFile(payload),
         Api.updateUserProfile(profile.id, { avatarPath: DEFAULT_AVATAR_PATH })
       ]);
 
@@ -34,19 +47,17 @@ const thunks = {
 const actions = {
   updateProfileAction: action((state, payload) => ({
     ...state,
-    profile: { ...state.profile, ...payload }
+    ...payload
   }))
 };
 
 export const profileModel = {
-  profile: {
-    email: "",
-    username: "",
-    id: "",
-    categories: [],
-    friends: [],
-    avatarPath: ""
-  },
+  id: "",
+  email: "",
+  username: "",
+  categories: [],
+  friends: [],
+  avatarPath: "",
   ...thunks,
   ...actions
 };

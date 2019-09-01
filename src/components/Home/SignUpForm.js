@@ -9,7 +9,7 @@ import fbIcon from "./img/fb-soc.svg";
 import vkIcon from "./img/vk-soc.svg";
 
 const FormComponent = ({ form }) => {
-  const { registerUser } = useStoreActions(actions => actions.session);
+  const registerUser = useStoreActions(actions => actions.session.registerUser);
   const [loading, setLoading] = useState(false);
   const { getFieldDecorator, getFieldsError } = form;
 

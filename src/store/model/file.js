@@ -11,6 +11,6 @@ const thunks = {
   })
 };
 
-export const commonModel = {
+export const fileModel = {
   ...thunks
 };

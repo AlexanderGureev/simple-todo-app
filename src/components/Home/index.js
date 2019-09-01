@@ -10,7 +10,9 @@ import { Header, Content } from "./styles";
 
 const Home = () => {
   const isAuth = useStoreState(state => state.session.isAuth);
-  const { recoverySession } = useStoreActions(actions => actions.session);
+  const recoverySession = useStoreActions(
+    actions => actions.session.recoverySession
+  );
 
   useEffect(() => {
     recoverySession();

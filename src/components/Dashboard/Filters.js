@@ -9,10 +9,11 @@ const FiltersComponent = () => {
     ACTIVE_FILTER_CACHE_KEY,
     0
   );
-  const setFilter = useStoreActions(actions => actions.session.setFilter);
-  const activeFilter = useStoreState(state => state.session.activeFilter);
-  const filters = useStoreState(state => state.session.filters);
+  const setFilter = useStoreActions(actions => actions.filter.setFilter);
+  const activeFilter = useStoreState(state => state.filter.activeFilter);
+  const filters = useStoreState(state => state.filter.filters);
 
+  console.log(filters);
   if (cachedFilter && activeFilter !== cachedFilter) {
     setFilter(cachedFilter);
   }

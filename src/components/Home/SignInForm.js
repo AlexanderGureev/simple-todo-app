@@ -8,7 +8,7 @@ import { validateRules, hasErrors } from "./validateRules";
 import SocialBlock from "./SocialBlock";
 
 const FormComponent = ({ form }) => {
-  const { authUser } = useStoreActions(actions => actions.session);
+  const authUser = useStoreActions(actions => actions.session.authUser);
   const [loading, setLoading] = useState(false);
   const { getFieldDecorator, getFieldsError } = form;
 

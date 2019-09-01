@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
+import { useStoreActions } from "easy-peasy";
 import Home from "./Home";
 import Dashboard from "./Dashboard";
 import PrivateRoute from "./Common/PrivateRoute";

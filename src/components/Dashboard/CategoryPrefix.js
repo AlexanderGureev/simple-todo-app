@@ -7,12 +7,11 @@ import useOnClickOutside from "../libs/useOnClickOutside";
 const DEFAULT_PREFIX_COLOR = "#399fe9";
 
 const CategoryPrefixComponent = () => {
-  const {
-    activeCategory,
-    profile: { categories }
-  } = useStoreState(state => state.session);
-
-  const { updateCategory } = useStoreActions(actions => actions.session);
+  const categories = useStoreState(state => state.profile.categories);
+  const activeCategory = useStoreState(state => state.category.activeCategory);
+  const updateCategory = useStoreActions(
+    actions => actions.category.updateCategory
+  );
   const [visible, setVisible] = useState(false);
   const prefixRef = useRef();
   useOnClickOutside(prefixRef, () => setVisible(false));

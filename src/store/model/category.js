@@ -6,19 +6,32 @@ const thunks = {
     actions.setCategory(firstCategory.id || "");
   }),
   createCategory: thunk(
-    async (actions, payload, { injections: { Api }, getState }) => {
-      const { profile } = getState();
+    async (
+      actions,
+      payload,
+      { injections: { Api }, getStoreState, getStoreActions }
+    ) => {
+      const { profile } = getStoreState();
+      const { updateProfileAction } = getStoreActions().profile;
+
       const newCategory = await Api.createCategory(payload);
       actions.setCategory(newCategory.id);
-      actions.updateProfileAction({
+      updateProfileAction({
         categories: [...profile.categories, newCategory]
       });
       return newCategory;
     }
   ),
   updateCategory: thunk(
-    async (actions, payload, { injections: { Api }, getState }) => {
-      const { activeCategory, profile } = getState();
+    async (
+      actions,
+      payload,
+      { injections: { Api }, getState, getStoreState, getStoreActions }
+    ) => {
+      const { profile } = getStoreState();
+      const { activeCategory } = getState();
+      const { updateCategoriesAction } = getStoreActions().profile;
+
       const updatedCategory = await Api.updateCategoryById(
         activeCategory,
         payload
@@ -26,13 +39,19 @@ const thunks = {
       const newStateCategories = profile.categories.map(category =>
         category.id === updatedCategory.id ? updatedCategory : category
       );
-      actions.updateCategoriesAction(newStateCategories);
+      updateCategoriesAction(newStateCategories);
       return updatedCategory;
     }
   ),
   deleteCategory: thunk(
-    async (actions, payload, { injections: { Api, cache }, getState }) => {
-      const { profile } = getState();
+    async (
+      actions,
+      payload,
+      { injections: { Api, cache }, getStoreState, getStoreActions }
+    ) => {
+      const { profile } = getStoreState();
+      const { updateProfileAction } = getStoreActions().profile;
+
       const deletedCategory = await Api.deleteCategory(payload);
       const filteredCategories = profile.categories.filter(
         ({ id }) => id !== deletedCategory.id
@@ -41,20 +60,14 @@ const thunks = {
       const [firstCategory = {}] = filteredCategories;
       actions.setCategory(firstCategory.id || "");
 
-      actions.updateProfileAction({ categories: filteredCategories });
-      await actions.getStatistics();
+      updateProfileAction({ categories: filteredCategories });
       return deletedCategory;
     }
   )
 };
 
 const actions = {
-  updateCategoriesAction: action((state, payload) => ({
-    ...state,
-    profile: { ...state.profile, categories: payload }
-  })),
   setCategory: action((state, payload) => ({
-    ...state,
     activeCategory: payload
   }))
 };

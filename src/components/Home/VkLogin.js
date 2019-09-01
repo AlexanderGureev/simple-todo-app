@@ -14,8 +14,8 @@ const VKLogin = ({
   ...rest
 }) => {
   const [loading, setLoading] = useState(false);
-  const { socialAuthorizeUserAction } = useStoreActions(
-    actions => actions.session
+  const socialAuthorizeUserAction = useStoreActions(
+    actions => actions.session.socialAuthorizeUserAction
   );
 
   const provider = "vk";

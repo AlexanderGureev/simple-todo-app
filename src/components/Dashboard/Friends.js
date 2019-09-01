@@ -4,7 +4,7 @@ import { Friends, Empty } from "./styles";
 import avaIcon from "./img/ava.jpg";
 
 const FriendsComponent = () => {
-  const { friends } = useStoreState(state => state.session.profile);
+  const friends = useStoreState(state => state.profile.friends);
 
   return (
     <Friends>

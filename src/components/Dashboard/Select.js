@@ -11,11 +11,15 @@ const IndicatorSeparator = () => null;
 const defaultCategory = { value: "empty", label: "empty" };
 
 const SelectComponent = () => {
-  const { categories } = useStoreState(state => state.session.profile);
-  const activeCategory = useStoreState(state => state.session.activeCategory);
-  const setCategory = useStoreActions(actions => actions.session.setCategory);
-  const { deleteCategory } = useStoreActions(actions => actions.session);
-  const { createCategory } = useStoreActions(actions => actions.session);
+  const categories = useStoreState(state => state.profile.categories);
+  const activeCategory = useStoreState(state => state.category.activeCategory);
+  const setCategory = useStoreActions(actions => actions.category.setCategory);
+  const deleteCategory = useStoreActions(
+    actions => actions.category.deleteCategory
+  );
+  const createCategory = useStoreActions(
+    actions => actions.category.createCategory
+  );
   const [cachedCategory, setCachedCategory] = useLocalStorage(
     ACTIVE_CATEGORY_CACHE_KEY,
     ""

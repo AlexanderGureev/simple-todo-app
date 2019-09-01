@@ -4,7 +4,7 @@ import { useStoreState } from "easy-peasy";
 import { Categories, Empty } from "./styles";
 
 const CategoriesComponent = () => {
-  const { categories } = useStoreState(state => state.session.profile);
+  const categories = useStoreState(state => state.profile.categories);
 
   function rowRenderer({ key, index, style }) {
     return (

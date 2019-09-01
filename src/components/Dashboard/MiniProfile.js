@@ -23,8 +23,11 @@ const data = [
 ];
 
 const MiniProfile = () => {
-  const { profile, statistics } = useStoreState(state => state.session);
-  const { getStatistics } = useStoreActions(actions => actions.session);
+  const profile = useStoreState(state => state.profile);
+  const statistics = useStoreState(state => state.statistics);
+  const getStatistics = useStoreActions(
+    actions => actions.statistics.getStatistics
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

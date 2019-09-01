@@ -1,19 +1,27 @@
+import { action } from "easy-peasy";
 import { authModel } from "./auth";
 import { categoryModel } from "./category";
 import { filterModel } from "./filter";
 import { profileModel } from "./profile";
 import { statisticsModel } from "./statistics";
 import { todoModel } from "./todo";
-import { commonModel } from "./common";
+import { fileModel } from "./file";
 
-export default {
-  session: {
-    ...authModel,
-    ...categoryModel,
-    ...filterModel,
-    ...profileModel,
-    ...statisticsModel,
-    ...todoModel,
-    ...commonModel
-  }
+const actions = {
+  resetState: action(() => ({
+    ...model.session
+  }))
 };
+
+const model = {
+  session: authModel,
+  category: categoryModel,
+  filter: filterModel,
+  profile: profileModel,
+  statistics: statisticsModel,
+  todo: todoModel,
+  file: fileModel,
+  ...actions
+};
+
+export default model;

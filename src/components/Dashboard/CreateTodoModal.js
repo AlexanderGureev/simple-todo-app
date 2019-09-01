@@ -4,9 +4,9 @@ import { Form, Input, Checkbox, message, Modal } from "antd";
 import { Button } from "../Common/styles";
 
 const CreateTodo = ({ form, handleCreateNewTodo }) => {
-  const createTodo = useStoreActions(actions => actions.session.createTodo);
-  const activeCategory = useStoreState(state => state.session.activeCategory);
-  const { categories } = useStoreState(state => state.session.profile);
+  const createTodo = useStoreActions(actions => actions.todo.createTodo);
+  const activeCategory = useStoreState(state => state.category.activeCategory);
+  const categories = useStoreState(state => state.profile.categories);
 
   const [visible, setVisible] = useState(false);
   const { getFieldDecorator } = form;
