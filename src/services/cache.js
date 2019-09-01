@@ -42,4 +42,4 @@ class Cache {
 export default Cache;
 
 export const ACTIVE_CATEGORY_CACHE_KEY = "activeCategory";
-export const ACTIVE_FILTER_CACHE_KEY = "filterOptions";
+export const ACTIVE_FILTER_CACHE_KEY = "activeFilter";

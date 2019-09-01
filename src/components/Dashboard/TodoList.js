@@ -67,6 +67,7 @@ function todoReducer(state, { type, payload }) {
     case "UPDATE_TODOS": {
       const { activeCategory, todo } = payload;
       const todosByFilters = Object.entries(state[activeCategory]);
+      console.log(todosByFilters);
       const todosByCategory = todosByFilters.reduce((acc, [filter, todos]) => {
         if (filter === "active" && todo.status === "completed") {
           return { ...acc, [filter]: todos.filter(({ id }) => id !== todo.id) };
@@ -84,6 +85,7 @@ function todoReducer(state, { type, payload }) {
         todos[index] = todo;
         return { ...acc, [filter]: [...todos] };
       }, {});
+      console.log(todosByCategory);
       return {
         ...state,
         [activeCategory]: todosByCategory
@@ -174,7 +176,8 @@ function countReducer(state, { type, payload }) {
 
 const TodoListComponent = () => {
   const { width: windowWidth } = useWindowSize();
-  const filterOptions = useStoreState(state => state.session.filterOptions);
+  const activeFilter = useStoreState(state => state.session.activeFilter);
+  const filters = useStoreState(state => state.session.filters);
   const activeCategory = useStoreState(state => state.session.activeCategory);
   const getTodosByCategory = useStoreActions(
     actions => actions.session.getTodosByCategory
@@ -194,7 +197,7 @@ const TodoListComponent = () => {
   useThrottleFn(() => forceUpdateList(), 500, [
     windowWidth,
     activeCategory,
-    filterOptions
+    activeFilter
   ]);
 
   useEffect(() => {
@@ -202,12 +205,12 @@ const TodoListComponent = () => {
   }, [counts, todos]);
 
   useEffect(() => {
-    async function fetchTodosByCategory() {
+    async function fetchTodosByCategory(id, params, filterKey) {
       try {
         setLoading(true);
         const data = await getTodosByCategory({
-          id: activeCategory,
-          params: filterOptions
+          id,
+          params
         });
 
         todosDispatch({ type: "SET_TODOS", payload: { ...data, filterKey } });
@@ -222,15 +225,17 @@ const TodoListComponent = () => {
       }
     }
 
-    const filterKey = mapFilterKey(filterOptions);
+    const key = mapFilterKey(activeFilter);
+    const params = mapQueryParams(activeFilter);
+
     if (
-      (todos[activeCategory] && todos[activeCategory][filterKey]) ||
+      (todos[activeCategory] && todos[activeCategory][key]) ||
       !activeCategory
     )
       return;
 
-    fetchTodosByCategory();
-  }, [activeCategory, filterOptions]); //eslint-disable-line
+    fetchTodosByCategory(activeCategory, params, key);
+  }, [activeCategory, activeFilter]); //eslint-disable-line
 
   const getRef = ref => {
     listRef.current = ref;
@@ -243,30 +248,30 @@ const TodoListComponent = () => {
       listRef.current.forceUpdate();
     }
   };
-  const mapFilterKey = filter => {
-    const [filterKey = "all"] = Object.keys(filter);
-    switch (filterKey) {
-      case "status":
-        return filter[filterKey];
-      case "primary":
-        return filterKey;
+  const mapQueryParams = filterIndex => {
+    switch (filterIndex) {
+      case 1:
+        return { status: "active" };
+      case 2:
+        return { status: "completed" };
+      case 3:
+        return { primary: true };
       default:
-        return filterKey;
+        return {};
     }
   };
+  const mapFilterKey = filterIndex => filters[filterIndex];
   const mapTodos = (categoryId, filter) => {
-    const filterKey = mapFilterKey(filter);
     const todosByCategory = todos[categoryId];
-
     if (!todosByCategory) return [];
 
-    switch (filterKey) {
-      case "primary":
-        return todosByCategory.primary || [];
-      case "active":
+    switch (filter) {
+      case 1:
         return todosByCategory.active || [];
-      case "completed":
+      case 2:
         return todosByCategory.completed || [];
+      case 3:
+        return todosByCategory.primary || [];
       default:
         return todosByCategory.all || [];
     }
@@ -290,7 +295,10 @@ const TodoListComponent = () => {
   };
   const changeStatusTodoHandle = todoId => async e => {
     try {
-      const todo = todos[activeCategory].all.find(({ id }) => id === todoId);
+      const currentFilter = mapFilterKey(activeFilter);
+      const todo = todos[activeCategory][currentFilter].find(
+        ({ id }) => id === todoId
+      );
       const updatedTodo = await changeStatusTodo({
         categoryId: activeCategory,
         todoId,
@@ -309,7 +317,7 @@ const TodoListComponent = () => {
     }
   };
   const handleCreateNewTodo = todo => {
-    const filterKey = mapFilterKey(filterOptions);
+    const filterKey = mapFilterKey(activeFilter);
     todosDispatch({
       type: "ADD_CREATED_TODO",
       payload: { todo, filterKey, activeCategory }
@@ -330,18 +338,18 @@ const TodoListComponent = () => {
     });
   };
   const isRowLoaded = ({ index }) => {
-    const todosState = mapTodos(activeCategory, filterOptions);
+    const todosState = mapTodos(activeCategory, activeFilter);
     return !!todosState[index];
   };
   const loadMoreRows = async ({ startIndex, stopIndex }) => {
-    const filterKey = mapFilterKey(filterOptions);
+    const filterKey = mapFilterKey(activeFilter);
     const limit = stopIndex + 1 - startIndex;
     const offset = startIndex;
     try {
       const data = await getTodosByCategory({
         id: activeCategory,
         params: {
-          ...filterOptions,
+          ...filters[activeFilter].filter,
           limit,
           offset
         }
@@ -363,8 +371,8 @@ const TodoListComponent = () => {
     }
   };
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const todosState = mapTodos(activeCategory, filterOptions);
-    const filterKey = mapFilterKey(filterOptions);
+    const todosState = mapTodos(activeCategory, activeFilter);
+    const filterKey = mapFilterKey(activeFilter);
 
     if (oldIndex === newIndex) {
       return;
@@ -380,7 +388,7 @@ const TodoListComponent = () => {
     handleSortingTodos(movedTodos);
   };
 
-  if (!loading && !mapTodos(activeCategory, filterOptions).length)
+  if (!loading && !mapTodos(activeCategory, activeFilter).length)
     return (
       <TodoListWrapper>
         <TodoList>
@@ -399,7 +407,7 @@ const TodoListComponent = () => {
           <InfiniteLoader
             isRowLoaded={isRowLoaded}
             loadMoreRows={loadMoreRows}
-            rowCount={mapCount(activeCategory, filterOptions)}
+            rowCount={mapCount(activeCategory, activeFilter)}
             minimumBatchSize={10}
             threshold={5}
           >
@@ -413,10 +421,10 @@ const TodoListComponent = () => {
                     width={width}
                     onRowsRendered={onRowsRendered}
                     onSortEnd={onSortEnd}
-                    todos={mapTodos(activeCategory, filterOptions)}
+                    todos={mapTodos(activeCategory, activeFilter)}
                     changeStatusTodoHandle={changeStatusTodoHandle}
                     handleDeleteTodo={handleDeleteTodo}
-                    todosCount={mapTodos(activeCategory, filterOptions).length}
+                    todosCount={mapTodos(activeCategory, activeFilter).length}
                     useDragHandle
                   />
                 )}

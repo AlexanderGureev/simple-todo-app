@@ -1,37 +1,36 @@
 import React from "react";
-import { useStoreActions } from "easy-peasy";
+import { useStoreActions, useStoreState } from "easy-peasy";
 import { useLocalStorage } from "react-use";
 import { Filters } from "./styles";
 import { ACTIVE_FILTER_CACHE_KEY } from "../../services/cache";
-
-const filters = [
-  { id: "all", text: "All", filter: {} },
-  { id: "active", text: "Active", filter: { status: "active" } },
-  { id: "completed", text: "Completed", filter: { status: "completed" } },
-  { id: "primary", text: "Primary", filter: { primary: true } }
-];
 
 const FiltersComponent = () => {
   const [cachedFilter, setCachedFilter] = useLocalStorage(
     ACTIVE_FILTER_CACHE_KEY,
     0
   );
-  const setFilter = useStoreActions(state => state.session.setFilter);
+  const setFilter = useStoreActions(actions => actions.session.setFilter);
+  const activeFilter = useStoreState(state => state.session.activeFilter);
+  const filters = useStoreState(state => state.session.filters);
 
-  const handleChangeFilter = (id, filter) => {
+  if (cachedFilter && activeFilter !== cachedFilter) {
+    setFilter(cachedFilter);
+  }
+
+  const handleChangeFilter = id => {
     setCachedFilter(id);
-    setFilter(filter);
+    setFilter(id);
   };
 
   return (
     <Filters>
-      {filters.map(({ id, text, filter }, i) => (
+      {filters.map((filter, i) => (
         <Filters.Item
-          key={id}
-          active={cachedFilter === i}
-          onClick={() => handleChangeFilter(i, filter)}
+          key={filter}
+          active={activeFilter === i}
+          onClick={() => handleChangeFilter(i)}
         >
-          {text}
+          {filter}
         </Filters.Item>
       ))}
     </Filters>

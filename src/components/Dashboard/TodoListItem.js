@@ -44,7 +44,7 @@ const TaskMenuComponent = ({ onClick }) => {
   );
 };
 
-const TodoListItem = ({ key, todo, handleDeleteTodo, handleChangeStatus }) => {
+const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
   const { activeCategory } = useStoreState(state => state.session);
   const { deleteTodo: deleteTodoAction } = useStoreActions(
     actions => actions.session
@@ -78,7 +78,7 @@ const TodoListItem = ({ key, todo, handleDeleteTodo, handleChangeStatus }) => {
   };
 
   return (
-    <TodoList.Item key={key}>
+    <TodoList.Item>
       <DropdownContainer ref={menuRef} id="dropDownContainer">
         <Dropdown
           getPopupContainer={() => document.getElementById("dropDownContainer")}

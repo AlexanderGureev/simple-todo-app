@@ -5,7 +5,12 @@ import {
   SortableElement,
   SortableHandle
 } from "react-sortable-hoc";
-import { TodoItemContainer, DragHandleContainer, StyledList } from "./styles";
+import {
+  TodoItemContainer,
+  DragHandleContainer,
+  StyledList,
+  CellWrapper
+} from "./styles";
 import TodoListItem from "./TodoListItem";
 import { ReactComponent as MoveBtn } from "./img/move.svg";
 
@@ -16,12 +21,11 @@ const DragHandle = SortableHandle(() => (
 ));
 
 const SortableItem = SortableElement(
-  ({ key, style, value, handleChangeStatus, handleDeleteTodo }) => {
+  ({ style, value, handleChangeStatus, handleDeleteTodo }) => {
     return (
       <TodoItemContainer style={style}>
         <DragHandle />
         <TodoListItem
-          key={key}
           todo={value}
           handleChangeStatus={handleChangeStatus}
           handleDeleteTodo={handleDeleteTodo}
@@ -45,24 +49,25 @@ const VirtualList = ({
 }) => {
   const rowRenderer = ({ key, index, parent, style }) => {
     return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-      >
-        {({ measure }) => (
-          <SortableItem
-            index={index}
-            key={key}
-            style={style}
-            value={todos[index]}
-            handleChangeStatus={changeStatusTodoHandle(todos[index].id)}
-            handleDeleteTodo={handleDeleteTodo}
-          />
-        )}
-      </CellMeasurer>
+      <CellWrapper key={todos[index].id}>
+        <CellMeasurer
+          cache={cache}
+          columnIndex={0}
+          key={key}
+          parent={parent}
+          rowIndex={index}
+        >
+          {({ measure }) => (
+            <SortableItem
+              index={index}
+              style={style}
+              value={todos[index]}
+              handleChangeStatus={changeStatusTodoHandle(todos[index].id)}
+              handleDeleteTodo={handleDeleteTodo}
+            />
+          )}
+        </CellMeasurer>
+      </CellWrapper>
     );
   };
 

@@ -598,7 +598,7 @@ export const DragHandleContainer = styled.div`
     height: 15px;
   }
 `;
-
+export const CellWrapper = styled.div``;
 export const TodoItemContainer = styled.div`
   display: flex;
   align-items: center;
