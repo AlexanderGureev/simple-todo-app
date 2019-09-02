@@ -343,13 +343,16 @@ const TodoListComponent = () => {
   };
   const loadMoreRows = async ({ startIndex, stopIndex }) => {
     const filterKey = mapFilterKey(activeFilter);
+    const params = mapQueryParams(activeFilter);
+
     const limit = stopIndex + 1 - startIndex;
     const offset = startIndex;
+
     try {
       const data = await getTodosByCategory({
         id: activeCategory,
         params: {
-          ...filters[activeFilter].filter,
+          ...params,
           limit,
           offset
         }
@@ -362,10 +365,15 @@ const TodoListComponent = () => {
       console.log(error);
     }
   };
-  const handleSortingTodos = async movedTodos => {
+  const handleSortingTodos = async (arr, oldIndex, newIndex) => {
     try {
-      const todosIds = movedTodos.map(({ id }) => id);
-      await updateSortingTodos({ categoryId: activeCategory, todosIds });
+      const list = arr.map(({ id }) => id);
+      await updateSortingTodos({
+        categoryId: activeCategory,
+        list,
+        oldIndex,
+        newIndex
+      });
     } catch (error) {
       console.log(error);
     }
@@ -385,7 +393,7 @@ const TodoListComponent = () => {
     });
 
     forceUpdateList();
-    handleSortingTodos(movedTodos);
+    handleSortingTodos(todosState, oldIndex, newIndex);
   };
 
   if (!loading && !mapTodos(activeCategory, activeFilter).length)
@@ -408,7 +416,7 @@ const TodoListComponent = () => {
             isRowLoaded={isRowLoaded}
             loadMoreRows={loadMoreRows}
             rowCount={mapCount(activeCategory, activeFilter)}
-            minimumBatchSize={10}
+            minimumBatchSize={20}
             threshold={5}
           >
             {({ onRowsRendered }) => (

@@ -15,7 +15,7 @@ const Home = () => {
   );
 
   useEffect(() => {
-    recoverySession();
+    recoverySession().catch(err => console.log(err));
   }, [recoverySession]);
 
   return isAuth ? (

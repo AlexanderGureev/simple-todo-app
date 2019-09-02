@@ -16,10 +16,16 @@ const thunks = {
     }
   ),
   updateSortingTodos: thunk(
-    async (actions, { categoryId, todosIds }, { injections: { Api } }) => {
+    async (
+      actions,
+      { categoryId, list, oldIndex, newIndex },
+      { injections: { Api } }
+    ) => {
       const data = await Api.updatePositionTodosByCategoryId(
         categoryId,
-        todosIds
+        list,
+        oldIndex,
+        newIndex
       );
       return data;
     }

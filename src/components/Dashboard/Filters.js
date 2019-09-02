@@ -13,7 +13,6 @@ const FiltersComponent = () => {
   const activeFilter = useStoreState(state => state.filter.activeFilter);
   const filters = useStoreState(state => state.filter.filters);
 
-  console.log(filters);
   if (cachedFilter && activeFilter !== cachedFilter) {
     setFilter(cachedFilter);
   }

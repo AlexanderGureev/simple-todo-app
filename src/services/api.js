@@ -179,6 +179,7 @@ const getTodosByCategory = async ({ id, params = {} }) => {
       url: `${API_GET_TODOS_BY_CATEGORY}/${id}`,
       params
     });
+
     if (status !== 200) throw new Error("The request failed");
     return data;
   } catch (error) {
@@ -241,12 +242,17 @@ const updateCategoryById = async (categoryId, body) => {
   }
 };
 
-const updatePositionTodosByCategoryId = async (categoryId, todosIds) => {
+const updatePositionTodosByCategoryId = async (
+  categoryId,
+  todosIds,
+  oldIndex,
+  newIndex
+) => {
   try {
     const { data, status } = await axios({
       method: "PUT",
       url: `${API_UPDATE_TODOS_POSITION_BY_CATEGORY}/${categoryId}`,
-      data: todosIds
+      data: { list: todosIds, oldIndex, newIndex }
     });
     if (![200, 204].includes(status)) throw new Error("The request failed");
     return data;
