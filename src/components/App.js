@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { useStoreActions } from "easy-peasy";
 import Home from "./Home";
 import Dashboard from "./Dashboard";
 import PrivateRoute from "./Common/PrivateRoute";
@@ -14,12 +13,12 @@ const App = () => {
 
   return (
     <>
-      {/* {visibleLoadingPage && (
+      {visibleLoadingPage && (
         <LoadingPage
           onAnimationEnd={handleAnimationEnd}
           delay={DEFAULT_TIME_LOADING_PAGE}
         />
-      )} */}
+      )}
 
       <Router>
         <Switch>
