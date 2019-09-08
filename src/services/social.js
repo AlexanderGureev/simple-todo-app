@@ -71,6 +71,7 @@ export default class SocialService {
         // eslint-disable-next-line no-empty
       } catch (error) {
         console.log(error.message);
+        closeDialog();
         failure(error.message);
       }
     }, 100);
