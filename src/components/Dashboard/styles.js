@@ -22,7 +22,6 @@ import uploadIcon from "./img/upload.svg";
 
 export const Row = styled(AntdRow)``;
 export const Col = styled(AntdCol)`
-  height: 100%;
   ::-webkit-scrollbar {
     visibility: hidden;
     width: 0px;

@@ -27,7 +27,8 @@ const DashboardComponent = props => {
             lg={{ span: 6, order: 0 }}
             style={{
               borderRight: isWide ? "none" : "1px solid #d1d1d1",
-              overflowX: "scroll"
+              overflowX: "scroll",
+              height: "100%"
             }}
           >
             <Row>
@@ -46,7 +47,11 @@ const DashboardComponent = props => {
           </Col>
 
           <Col
-            style={{ display: "flex", flexDirection: "column" }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%"
+            }}
             xs={{ span: 24, order: 0 }}
             lg={{ span: 18, order: 1 }}
           >
@@ -60,7 +65,7 @@ const DashboardComponent = props => {
               </Col>
             </Row>
 
-            <Row style={{ flexGrow: 1 }}>
+            <Row type="flex" style={{ flexGrow: 1 }}>
               <Col xs={24} style={{ display: "flex", flexDirection: "column" }}>
                 <TopLine />
                 <TodoList />

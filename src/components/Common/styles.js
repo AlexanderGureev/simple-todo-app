@@ -1,6 +1,6 @@
-import styled, { keyframes, css } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Button as AntdButton } from "antd";
-import { ReactComponent as Logo } from "../Home/img/logo.svg";
+import { ReactComponent as Logo } from "../Home/img/miniLogo.svg";
 
 export const PreloaderContainer = styled.div`
   width: 100%;
