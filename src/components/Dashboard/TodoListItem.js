@@ -1,16 +1,15 @@
-import React, { useState, useRef } from "react";
-import { Dropdown, Icon, Popconfirm } from "antd";
+import React from "react";
+import { Dropdown, Icon, Modal } from "antd";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { TodoList, TaskMenu, DropdownContainer } from "./styles";
+import { TodoList, TaskMenu } from "./styles";
 import { ReactComponent as SettingIcon } from "./img/menu-icon.svg";
 import { ReactComponent as CheckIcon } from "./img/checked.svg";
-import useOnClickOutside from "../libs/useOnClickOutside";
+
+const { confirm } = Modal;
 
 const TaskMenuComponent = ({ onClick }) => {
-  const handleClick = props => {
-    if (props.key === "delete") return;
-    onClick(props);
-  };
+  const handleClick = props => onClick(props);
+
   return (
     <TaskMenu onClick={handleClick}>
       <TaskMenu.Item key="edit">
@@ -27,18 +26,10 @@ const TaskMenuComponent = ({ onClick }) => {
       </TaskMenu.Item>
       <TaskMenu.Divider />
       <TaskMenu.Item key="delete">
-        <Popconfirm
-          onConfirm={e => onClick({ key: "delete", domEvent: e })}
-          title="Are you sure？"
-          icon={
-            <Icon type="question-circle-o" style={{ color: "#ff0000ab" }} />
-          }
-        >
-          <TaskMenu.Item.Text>
-            <Icon type="delete" style={{ color: "#ff0000ab" }} />
-            Delete task
-          </TaskMenu.Item.Text>
-        </Popconfirm>
+        <TaskMenu.Item.Text>
+          <Icon type="delete" style={{ color: "#ff0000ab" }} />
+          Delete task
+        </TaskMenu.Item.Text>
       </TaskMenu.Item>
     </TaskMenu>
   );
@@ -47,11 +38,6 @@ const TaskMenuComponent = ({ onClick }) => {
 const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
   const activeCategory = useStoreState(state => state.category.activeCategory);
   const deleteTodo = useStoreActions(actions => actions.todo.deleteTodo);
-  const [visible, setVisible] = useState(false);
-  const menuRef = useRef();
-
-  useOnClickOutside(menuRef, () => setVisible(false));
-  const handleOpenDropdown = e => setVisible(!visible);
 
   const deleteTodoById = async () => {
     try {
@@ -65,11 +51,23 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
     }
   };
 
-  const handleClick = ({ key: actionKey, domEvent }) => {
+  const showDeleteConfirm = () => {
+    confirm({
+      title: "Are you sure delete this task?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        deleteTodoById();
+      }
+    });
+  };
+
+  const handleClick = ({ key: actionKey }) => {
     const fnMap = {
       edit: () => {},
       duplicate: () => {},
-      delete: deleteTodoById
+      delete: showDeleteConfirm
     };
 
     fnMap[actionKey]();
@@ -77,16 +75,12 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
 
   return (
     <TodoList.Item>
-      <DropdownContainer ref={menuRef} id="dropDownContainer">
-        <Dropdown
-          getPopupContainer={() => document.getElementById("dropDownContainer")}
-          onClick={handleOpenDropdown}
-          overlay={TaskMenuComponent({ onClick: handleClick })}
-          visible={visible}
-        >
-          <TodoList.Item.Icon component={SettingIcon} />
-        </Dropdown>
-      </DropdownContainer>
+      <Dropdown
+        overlay={TaskMenuComponent({ onClick: handleClick })}
+        trigger={["click"]}
+      >
+        <TodoList.Item.Icon component={SettingIcon} />
+      </Dropdown>
 
       <TodoList.Item.Icon
         onClick={handleChangeStatus}

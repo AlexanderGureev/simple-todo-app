@@ -72,8 +72,8 @@ export default class SocialService {
       } catch (error) {
         console.log(error.message);
         closeDialog();
-        failure(error.message);
+        // failure(error.message);
       }
-    }, 100);
+    }, 300);
   };
 }

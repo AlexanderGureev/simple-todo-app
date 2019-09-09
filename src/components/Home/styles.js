@@ -21,11 +21,10 @@ export const Header = styled.div`
 `;
 
 Header.Logo = styled(Logo)`
-  margin: 40px 0 0 50px;
+  margin: 20px 0 0 35px;
   cursor: pointer;
 
   @media (max-width: 590px) {
-    margin: 40px 0 0 30px;
     width: 130px;
   }
 `;
@@ -35,24 +34,26 @@ const Title = styled.p`
   color: #fff;
   font-size: 60px;
   margin: 0;
+  padding: 0 20px;
 
   @media (max-width: 890px) {
     font-size: 45px;
   }
 
   @media (max-width: 590px) {
-    font-size: 35px;
+    font-size: 36px;
   }
 `;
+
 const Caption = styled(Title)`
-  padding-top: 10px;
+  padding-top: 15px;
   font-size: 25px;
 
   @media (max-width: 890px) {
     font-size: 18px;
   }
   @media (max-width: 590px) {
-    font-size: 14px;
+    font-size: 16px;
   }
 `;
 
@@ -72,7 +73,7 @@ const ScrollBtn = styled(AnchorLink)`
   box-shadow: 0 5px 15px rgba(119, 217, 247, 0.15);
   cursor: pointer;
   position: absolute;
-  top: 650px;
+  top: 640px;
 
   &::after {
     background: url(${props => props.src}) no-repeat center center;
@@ -84,19 +85,6 @@ const ScrollBtn = styled(AnchorLink)`
     left: 12px;
     margin: 0 auto;
     background-size: contain;
-
-    @media (max-width: 720px) {
-      width: 20px;
-      height: 20px;
-      top: 10px;
-      left: 10px;
-    }
-  }
-
-  @media (max-width: 720px) {
-    width: 40px;
-    height: 40px;
-    top: 620px;
   }
 `;
 
