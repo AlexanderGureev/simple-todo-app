@@ -205,12 +205,21 @@ const TodoListComponent = () => {
   }, [counts, todos]);
 
   useEffect(() => {
-    async function fetchTodosByCategory(id, params, filterKey) {
+    const key = mapFilterKey(activeFilter);
+    const params = mapQueryParams(activeFilter);
+
+    if (
+      (todos[activeCategory] && todos[activeCategory][key]) ||
+      !activeCategory
+    )
+      return;
+
+    async function fetchTodosByCategory(id, queryParams, filterKey) {
       try {
         setLoading(true);
         const data = await getTodosByCategory({
           id,
-          params
+          params: queryParams
         });
 
         todosDispatch({ type: "SET_TODOS", payload: { ...data, filterKey } });
@@ -224,15 +233,6 @@ const TodoListComponent = () => {
         setLoading(false);
       }
     }
-
-    const key = mapFilterKey(activeFilter);
-    const params = mapQueryParams(activeFilter);
-
-    if (
-      (todos[activeCategory] && todos[activeCategory][key]) ||
-      !activeCategory
-    )
-      return;
 
     fetchTodosByCategory(activeCategory, params, key);
   }, [activeCategory, activeFilter]); //eslint-disable-line
@@ -248,6 +248,7 @@ const TodoListComponent = () => {
       listRef.current.forceUpdate();
     }
   };
+
   const mapQueryParams = filterIndex => {
     switch (filterIndex) {
       case 1:

@@ -9,11 +9,11 @@ const thunks = {
       payload,
       { injections: { Api }, getState, getStoreActions }
     ) => {
-      const { profile } = getState();
+      const { id } = getState();
       const { uploadFile } = getStoreActions().file;
 
       const { path } = await uploadFile(payload);
-      const { avatarPath } = await Api.updateUserProfile(profile.id, {
+      const { avatarPath } = await Api.updateUserProfile(id, {
         avatarPath: path
       });
 
@@ -27,12 +27,12 @@ const thunks = {
       payload,
       { injections: { Api }, getState, getStoreActions }
     ) => {
-      const { profile } = getState();
+      const { id } = getState();
       const { removeFile } = getStoreActions().file;
 
       const [, { avatarPath }] = await Promise.all([
         removeFile(payload),
-        Api.updateUserProfile(profile.id, { avatarPath: DEFAULT_AVATAR_PATH })
+        Api.updateUserProfile(id, { avatarPath: DEFAULT_AVATAR_PATH })
       ]);
 
       actions.updateProfileAction({ avatarPath });
