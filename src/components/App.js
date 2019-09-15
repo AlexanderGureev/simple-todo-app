@@ -13,12 +13,12 @@ const App = () => {
 
   return (
     <>
-      {/* {visibleLoadingPage && (
+      {visibleLoadingPage && (
         <LoadingPage
           onAnimationEnd={handleAnimationEnd}
           delay={DEFAULT_TIME_LOADING_PAGE}
         />
-      )} */}
+      )}
 
       <Router>
         <Switch>
