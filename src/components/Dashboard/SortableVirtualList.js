@@ -57,7 +57,7 @@ const VirtualList = ({
           parent={parent}
           rowIndex={index}
         >
-          {({ measure }) => (
+          {() => (
             <SortableItem
               index={index}
               style={style}
@@ -81,7 +81,7 @@ const VirtualList = ({
       width={width}
       rowCount={todosCount}
       rowRenderer={rowRenderer}
-      overscanRowCount={0}
+      overscanRowCount={20}
     />
   );
 };

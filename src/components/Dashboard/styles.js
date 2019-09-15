@@ -60,11 +60,14 @@ export const ContentWrapper = styled.div`
   }
 `;
 
-export const DropdownContainer = styled.div``;
-export const TaskMenu = styled(AntdMenu)``;
+export const TaskMenu = styled(AntdMenu)`
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+  border-right: none;
+  border-radius: 5px;
+`;
 
 TaskMenu.Item = styled(AntdMenu.Item)`
-  display: flex;
+  /* display: flex;
   justify-content: left;
   align-items: center;
   && {
@@ -74,13 +77,13 @@ TaskMenu.Item = styled(AntdMenu.Item)`
         font-size: 12px;
       }
     }
-  }
+  } */
 `;
 TaskMenu.Item.Text = styled.div`
-  i {
+  /* i {
     margin-right: 5px;
   }
-  padding: 5px 10px;
+  padding: 5px 10px; */
 `;
 
 export const Menu = styled.div`

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { useLocalStorage } from "react-use";
 import { Filters } from "./styles";
@@ -17,18 +17,22 @@ const FiltersComponent = () => {
     setFilter(cachedFilter);
   }
 
-  const handleChangeFilter = id => {
-    setCachedFilter(id);
-    setFilter(id);
-  };
+  const handleChangeFilter = useCallback(
+    ({ target }) => {
+      const id = Number(target.getAttribute("data-filter-id"));
+      setCachedFilter(id);
+      setFilter(id);
+    },
+    [setCachedFilter, setFilter]
+  );
 
   return (
-    <Filters>
+    <Filters onClick={handleChangeFilter}>
       {filters.map((filter, i) => (
         <Filters.Item
           key={filter}
           active={activeFilter === i}
-          onClick={() => handleChangeFilter(i)}
+          data-filter-id={i}
         >
           {filter}
         </Filters.Item>

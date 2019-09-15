@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useReducer, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useReducer,
+  useRef,
+  useMemo,
+  useCallback
+} from "react";
 import {
   CellMeasurerCache,
   AutoSizer,
@@ -261,22 +268,30 @@ const TodoListComponent = () => {
         return {};
     }
   };
-  const mapFilterKey = filterIndex => filters[filterIndex];
-  const mapTodos = (categoryId, filter) => {
-    const todosByCategory = todos[categoryId];
-    if (!todosByCategory) return [];
 
-    switch (filter) {
-      case 1:
-        return todosByCategory.active || [];
-      case 2:
-        return todosByCategory.completed || [];
-      case 3:
-        return todosByCategory.primary || [];
-      default:
-        return todosByCategory.all || [];
-    }
-  };
+  const mapFilterKey = useCallback(filterIndex => filters[filterIndex], [
+    filters
+  ]);
+
+  const mapTodos = useCallback(
+    (categoryId, filter) => {
+      const todosByCategory = todos[categoryId];
+      if (!todosByCategory) return [];
+
+      switch (filter) {
+        case 1:
+          return todosByCategory.active || [];
+        case 2:
+          return todosByCategory.completed || [];
+        case 3:
+          return todosByCategory.primary || [];
+        default:
+          return todosByCategory.all || [];
+      }
+    },
+    [todos]
+  );
+
   const mapCount = (categoryId, filter) => {
     const filterKey = mapFilterKey(filter);
     const countTodosByCategory = counts[categoryId];
@@ -294,50 +309,62 @@ const TodoListComponent = () => {
         return countTodosByCategory.all || 0;
     }
   };
-  const changeStatusTodoHandle = todoId => async e => {
-    try {
-      const currentFilter = mapFilterKey(activeFilter);
-      const todo = todos[activeCategory][currentFilter].find(
-        ({ id }) => id === todoId
-      );
-      const updatedTodo = await changeStatusTodo({
-        categoryId: activeCategory,
-        todoId,
-        body: { status: todo.status === "active" ? "completed" : "active" }
-      });
-      todosDispatch({
-        type: "UPDATE_TODOS",
-        payload: { todo: updatedTodo, activeCategory }
-      });
+  const changeStatusTodoHandle = useCallback(
+    todoId => async e => {
+      try {
+        const currentFilter = mapFilterKey(activeFilter);
+        const todo = todos[activeCategory][currentFilter].find(
+          ({ id }) => id === todoId
+        );
+        const updatedTodo = await changeStatusTodo({
+          categoryId: activeCategory,
+          todoId,
+          body: { status: todo.status === "active" ? "completed" : "active" }
+        });
+        todosDispatch({
+          type: "UPDATE_TODOS",
+          payload: { todo: updatedTodo, activeCategory }
+        });
 
-      if (updatedTodo.status === "completed") {
-        message.success("1 task completed");
+        if (updatedTodo.status === "completed") {
+          message.success("1 task completed");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleCreateNewTodo = todo => {
-    const filterKey = mapFilterKey(activeFilter);
-    todosDispatch({
-      type: "ADD_CREATED_TODO",
-      payload: { todo, filterKey, activeCategory }
-    });
-    countsDispatch({
-      type: "INCREMENT_COUNT_TODOS",
-      payload: { activeCategory, filterKey }
-    });
-  };
-  const handleDeleteTodo = deletedTodo => {
-    todosDispatch({
-      type: "REMOVE_DELETED_TODO",
-      payload: { todo: deletedTodo, activeCategory }
-    });
-    countsDispatch({
-      type: "DECREMENT_COUNT_TODOS",
-      payload: { todo: deletedTodo, activeCategory }
-    });
-  };
+    },
+    [activeCategory, activeFilter, changeStatusTodo, mapFilterKey, todos]
+  );
+
+  const handleCreateNewTodo = useCallback(
+    todo => {
+      const filterKey = mapFilterKey(activeFilter);
+      todosDispatch({
+        type: "ADD_CREATED_TODO",
+        payload: { todo, filterKey, activeCategory }
+      });
+      countsDispatch({
+        type: "INCREMENT_COUNT_TODOS",
+        payload: { activeCategory, filterKey }
+      });
+    },
+    [activeCategory, activeFilter, mapFilterKey]
+  );
+
+  const handleDeleteTodo = useCallback(
+    deletedTodo => {
+      todosDispatch({
+        type: "REMOVE_DELETED_TODO",
+        payload: { todo: deletedTodo, activeCategory }
+      });
+      countsDispatch({
+        type: "DECREMENT_COUNT_TODOS",
+        payload: { todo: deletedTodo, activeCategory }
+      });
+    },
+    [activeCategory]
+  );
+
   const isRowLoaded = ({ index }) => {
     const todosState = mapTodos(activeCategory, activeFilter);
     return !!todosState[index];
@@ -397,7 +424,17 @@ const TodoListComponent = () => {
     handleSortingTodos(todosState, oldIndex, newIndex);
   };
 
-  if (!loading && !mapTodos(activeCategory, activeFilter).length)
+  const todosCount = useMemo(
+    () => mapTodos(activeCategory, activeFilter).length,
+    [activeCategory, activeFilter, mapTodos]
+  );
+  const todosList = useMemo(() => mapTodos(activeCategory, activeFilter), [
+    activeCategory,
+    activeFilter,
+    mapTodos
+  ]);
+
+  if (!loading && !todosCount)
     return (
       <TodoListWrapper>
         <TodoList>
@@ -430,10 +467,10 @@ const TodoListComponent = () => {
                     width={width}
                     onRowsRendered={onRowsRendered}
                     onSortEnd={onSortEnd}
-                    todos={mapTodos(activeCategory, activeFilter)}
+                    todos={todosList}
                     changeStatusTodoHandle={changeStatusTodoHandle}
                     handleDeleteTodo={handleDeleteTodo}
-                    todosCount={mapTodos(activeCategory, activeFilter).length}
+                    todosCount={todosCount}
                     useDragHandle
                   />
                 )}

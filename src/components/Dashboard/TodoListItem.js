@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Dropdown, Icon, Modal } from "antd";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { TodoList, TaskMenu } from "./styles";
@@ -7,11 +7,9 @@ import { ReactComponent as CheckIcon } from "./img/checked.svg";
 
 const { confirm } = Modal;
 
-const TaskMenuComponent = ({ onClick }) => {
-  const handleClick = props => onClick(props);
-
+const TaskMenuComponent = ({ handleClick }) => {
   return (
-    <TaskMenu onClick={handleClick}>
+    <TaskMenu onClick={handleClick} selectable={false}>
       <TaskMenu.Item key="edit">
         <TaskMenu.Item.Text>
           <Icon type="edit" />
@@ -39,7 +37,7 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
   const activeCategory = useStoreState(state => state.category.activeCategory);
   const deleteTodo = useStoreActions(actions => actions.todo.deleteTodo);
 
-  const deleteTodoById = async () => {
+  const deleteTodoById = useCallback(async () => {
     try {
       const deletedTodo = await deleteTodo({
         categoryId: activeCategory,
@@ -49,9 +47,9 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [activeCategory, deleteTodo, handleDeleteTodo, todo.id]);
 
-  const showDeleteConfirm = () => {
+  const showDeleteConfirm = useCallback(() => {
     confirm({
       title: "Are you sure delete this task?",
       okText: "Yes",
@@ -61,24 +59,24 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
         deleteTodoById();
       }
     });
-  };
+  }, [deleteTodoById]);
 
-  const handleClick = ({ key: actionKey }) => {
-    const fnMap = {
-      edit: () => {},
-      duplicate: () => {},
-      delete: showDeleteConfirm
-    };
+  const handleClick = useCallback(
+    ({ key: actionKey }) => {
+      const fnMap = {
+        edit: () => {},
+        duplicate: () => {},
+        delete: showDeleteConfirm
+      };
 
-    fnMap[actionKey]();
-  };
+      fnMap[actionKey]();
+    },
+    [showDeleteConfirm]
+  );
 
   return (
     <TodoList.Item>
-      <Dropdown
-        overlay={TaskMenuComponent({ onClick: handleClick })}
-        trigger={["click"]}
-      >
+      <Dropdown overlay={<TaskMenuComponent handleClick={handleClick} />}>
         <TodoList.Item.Icon component={SettingIcon} />
       </Dropdown>
 
@@ -97,4 +95,4 @@ const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
   );
 };
 
-export default TodoListItem;
+export default React.memo(TodoListItem);
