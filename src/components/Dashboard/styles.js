@@ -554,7 +554,7 @@ TopLine.Container = TopLineContainer;
 export const TodoListWrapper = styled.div`
   height: 100%;
   button {
-    margin-bottom: 30px;
+    margin-top: 10px;
   }
 `;
 export const TodoList = styled.div`

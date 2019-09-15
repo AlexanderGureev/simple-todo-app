@@ -81,7 +81,7 @@ const VirtualList = ({
       width={width}
       rowCount={todosCount}
       rowRenderer={rowRenderer}
-      overscanRowCount={20}
+      overscanRowCount={0}
     />
   );
 };

@@ -30,4 +30,4 @@ const FriendsComponent = () => {
     </Friends>
   );
 };
-export default FriendsComponent;
+export default React.memo(FriendsComponent);

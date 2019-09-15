@@ -7,7 +7,7 @@ import { ReactComponent as CheckIcon } from "./img/checked.svg";
 
 const { confirm } = Modal;
 
-const TaskMenuComponent = ({ handleClick }) => {
+const TaskMenuComponent = React.memo(({ handleClick }) => {
   return (
     <TaskMenu onClick={handleClick} selectable={false}>
       <TaskMenu.Item key="edit">
@@ -31,7 +31,7 @@ const TaskMenuComponent = ({ handleClick }) => {
       </TaskMenu.Item>
     </TaskMenu>
   );
-};
+});
 
 const TodoListItem = ({ todo, handleDeleteTodo, handleChangeStatus }) => {
   const activeCategory = useStoreState(state => state.category.activeCategory);

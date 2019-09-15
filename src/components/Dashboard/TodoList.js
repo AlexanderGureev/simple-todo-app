@@ -4,7 +4,8 @@ import React, {
   useReducer,
   useRef,
   useMemo,
-  useCallback
+  useCallback,
+  useLayoutEffect
 } from "react";
 import {
   CellMeasurerCache,
@@ -211,7 +212,7 @@ const TodoListComponent = () => {
     forceUpdateList();
   }, [counts, todos]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const key = mapFilterKey(activeFilter);
     const params = mapQueryParams(activeFilter);
 
@@ -455,7 +456,7 @@ const TodoListComponent = () => {
             loadMoreRows={loadMoreRows}
             rowCount={mapCount(activeCategory, activeFilter)}
             minimumBatchSize={20}
-            threshold={5}
+            threshold={10}
           >
             {({ onRowsRendered }) => (
               <AutoSizer>
@@ -484,4 +485,4 @@ const TodoListComponent = () => {
   );
 };
 
-export default TodoListComponent;
+export default React.memo(TodoListComponent);

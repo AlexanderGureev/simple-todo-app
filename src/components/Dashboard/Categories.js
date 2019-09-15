@@ -39,4 +39,4 @@ const CategoriesComponent = () => {
     </Categories>
   );
 };
-export default CategoriesComponent;
+export default React.memo(CategoriesComponent);

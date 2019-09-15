@@ -16,8 +16,6 @@ const DashboardComponent = props => {
   const isWide = useMedia("(max-width: 991px)");
   const isSmall = useMedia("(max-width: 580px)");
 
-  const handleLogout = () => logoutUser();
-
   return (
     <Dashboard src={dashboardBg}>
       <ContentWrapper>
@@ -58,9 +56,9 @@ const DashboardComponent = props => {
             <Row style={{ flexGrow: 0 }}>
               <Col xs={24}>
                 {isSmall ? (
-                  <DropdownMenu handleClick={handleLogout} {...props} />
+                  <DropdownMenu handleClick={logoutUser} {...props} />
                 ) : (
-                  <Menu handleClick={handleLogout} {...props} />
+                  <Menu handleClick={logoutUser} {...props} />
                 )}
               </Col>
             </Row>

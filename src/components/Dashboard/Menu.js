@@ -14,4 +14,4 @@ const MenuComponent = ({ handleClick, location: { pathname } }) => {
     </Menu>
   );
 };
-export default MenuComponent;
+export default React.memo(MenuComponent);

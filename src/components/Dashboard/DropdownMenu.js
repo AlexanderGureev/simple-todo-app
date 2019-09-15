@@ -34,4 +34,4 @@ const DropdownMenu = ({ handleClick, location: { pathname } }) => {
   );
 };
 
-export default DropdownMenu;
+export default React.memo(DropdownMenu);

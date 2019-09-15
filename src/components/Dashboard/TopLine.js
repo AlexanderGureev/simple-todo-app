@@ -18,4 +18,4 @@ const TopLineComponent = () => {
   );
 };
 
-export default TopLineComponent;
+export default React.memo(TopLineComponent);
